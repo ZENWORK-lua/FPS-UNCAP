@@ -356,9 +356,63 @@ table.insert(connections, btnConfirmYes.MouseButton1Click:Connect(function()
     elseif confirmStep == 2 then env.SYROX_RUNNING = false; if screenGui then screenGui:Destroy() end end
 end))
 
-table.insert(connections, headerPillTouch.InputBegan:Connect(function(input) if isIntroPlaying then return end; if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then draggingPill = true; isDraggingMoved = false; pillDragStart = input.Position; startPos = mainFrame.Position end end))
-table.insert(connections, UserInputService.InputChanged:Connect(function(input) if draggingPill and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then local delta = input.Position - pillDragStart; if math.abs(delta.X) > 3 or math.abs(delta.Y) > 3 then isDraggingMoved = true end; mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y) end end))
-table.insert(connections, headerPillTouch.InputEnded:Connect(function(input)
+-- one of best features
+table.insert(connections, headerPillTouch.InputBegan:Connect(function(input) 
+    if isIntroPlaying then return end 
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then 
+        draggingPill = true 
+        isDraggingMoved = false 
+        pillDragStart = input.Position 
+        startPos = mainFrame.Position 
+    end 
+end))
+
+table.insert(connections, UserInputService.InputChanged:Connect(function(input) 
+    if draggingPill and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then 
+        local delta = input.Position - pillDragStart 
+        if math.abs(delta.X) > 3 or math.abs(delta.Y) > 3 then isDraggingMoved = true end 
+        
+        --
+        local viewportSize = workspace.CurrentCamera.ViewportSize
+        local frameSize = mainFrame.AbsoluteSize
+        local anchor = mainFrame.AnchorPoint
+        
+        --
+        local rawX = startPos.X.Offset + delta.X
+        local rawY = startPos.Y.Offset + delta.Y
+        
+        --
+        local minX = (anchor.X * frameSize.X) - (viewportSize.X * 0.5)
+        local maxX = (viewportSize.X * 0.5) - ((1 - anchor.X) * frameSize.X)
+        local minY = (anchor.Y * frameSize.Y) - (viewportSize.Y * 0.5)
+        local maxY = (viewportSize.Y * 0.5) - ((1 - anchor.Y) * frameSize.Y)
+        
+        local clampedX = math.clamp(rawX, minX, maxX)
+        local clampedY = math.clamp(rawY, minY, maxY)
+        
+        mainFrame.Position = UDim2.new(startPos.X.Scale, clampedX, startPos.Y.Scale, clampedY) 
+    end 
+end))
+
+table.insert(connections, headerPillTouch.InputEnded:Connect(function(input) 
+    if draggingPill and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
+        draggingPill = false 
+        if isDraggingMoved then return end 
+        tapCount = tapCount + 1 
+        if tapCount == 1 then 
+            task.delay(0.25, function() 
+                if tapCount == 1 then 
+                    if currentState == 0 then minimizeMenu() elseif currentState == 1 then maximizeMenu() end 
+                end 
+                tapCount = 0 
+            end) 
+        elseif tapCount == 2 then 
+            tapCount = 0 
+            if currentState == 1 then startCloseSequence() end 
+        end 
+    end 
+end))
+
     if draggingPill and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
         draggingPill = false; if isDraggingMoved then return end
         tapCount = tapCount + 1
