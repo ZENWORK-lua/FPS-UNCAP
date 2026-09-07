@@ -138,7 +138,10 @@ local sliderKnob = Instance.new("Frame"); sliderKnob.Size = UDim2.new(0, 18, 0, 
 local fpsDisplay = Instance.new("TextLabel"); fpsDisplay.Size = UDim2.new(1, -24, 0, 18); fpsDisplay.Position = UDim2.new(0, 12, 0, 42); fpsDisplay.BackgroundTransparency = 1; fpsDisplay.Font = Enum.Font.SourceSansSemibold; fpsDisplay.TextColor3 = Color3.fromRGB(160, 160, 175); fpsDisplay.TextSize = 13; fpsDisplay.TextXAlignment = Enum.TextXAlignment.Left; fpsDisplay.Text = "Current FPS: 0"; fpsDisplay.Parent = mainPage
 
 local stabTitle = Instance.new("TextLabel"); stabTitle.Size = UDim2.new(1, -24, 0, 16); stabTitle.Position = UDim2.new(0, 12, 0, 110); stabTitle.BackgroundTransparency = 1; stabTitle.Font = Enum.Font.SourceSansBold; stabTitle.Text = "FEATURES (SWIPE RIGHT ->)"; stabTitle.TextColor3 = Color3.fromRGB(0, 200, 255); stabTitle.TextSize = 11; stabTitle.TextXAlignment = Enum.TextXAlignment.Left; stabTitle.Parent = mainPage
-local scrollFrame = Instance.new("ScrollingFrame"); scrollFrame.Size = UDim2.new(1, -24, 0, 65); scrollFrame.Position = UDim2.new(0, 12, 0, 130); scrollFrame.BackgroundTransparency = 1; scrollFrame.BorderSizePixel = 0; scrollFrame.ScrollBarThickness = 0; scrollFrame.ScrollingDirection = Enum.ScrollingDirection.X; scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.X; scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0); scrollFrame.Parent = mainPage 
+
+local hMask = Instance.new("CanvasGroup"); hMask.Size = UDim2.new(1, -24, 0, 65); hMask.Position = UDim2.new(0, 12, 0, 130); hMask.BackgroundTransparency = 1; hMask.BorderSizePixel = 0; hMask.Parent = mainPage
+local hGrad = Instance.new("UIGradient"); hGrad.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.08, 0), NumberSequenceKeypoint.new(0.92, 0), NumberSequenceKeypoint.new(1, 1)}); hGrad.Parent = hMask
+local scrollFrame = Instance.new("ScrollingFrame"); scrollFrame.Size = UDim2.new(1, 0, 1, 0); scrollFrame.BackgroundTransparency = 1; scrollFrame.BorderSizePixel = 0; scrollFrame.ScrollBarThickness = 0; scrollFrame.ScrollingDirection = Enum.ScrollingDirection.X; scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.X; scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0); scrollFrame.Parent = hMask 
 local gridLayout = Instance.new("UIGridLayout"); gridLayout.CellSize = UDim2.new(0, 115, 0, 28); gridLayout.CellPadding = UDim2.new(0, 8, 0, 8); gridLayout.FillDirection = Enum.FillDirection.Vertical; gridLayout.Parent = scrollFrame
 -- [[ TAB NAVIGATION & SCROLLS ]]
 local segmentBg = Instance.new("Frame")
@@ -153,8 +156,11 @@ Instance.new("UICorner", segmentSlider).CornerRadius = UDim.new(1, 0)
 local btnSysTab = Instance.new("TextButton"); btnSysTab.Size = UDim2.new(0, 95, 1, 0); btnSysTab.Position = UDim2.new(0, 0, 0, 0); btnSysTab.BackgroundTransparency = 1; btnSysTab.Font = Enum.Font.SourceSansBold; btnSysTab.Text = "SYSTEM"; btnSysTab.TextColor3 = Color3.fromRGB(255, 255, 255); btnSysTab.TextSize = 11; btnSysTab.Parent = segmentBg
 local btnFeatTab = Instance.new("TextButton"); btnFeatTab.Size = UDim2.new(0, 65, 1, 0); btnFeatTab.Position = UDim2.new(0, 95, 0, 0); btnFeatTab.BackgroundTransparency = 1; btnFeatTab.Font = Enum.Font.SourceSansBold; btnFeatTab.Text = "MORE"; btnFeatTab.TextColor3 = Color3.fromRGB(150, 150, 160); btnFeatTab.TextSize = 11; btnFeatTab.Parent = segmentBg
 
-local sysScroll = Instance.new("ScrollingFrame"); sysScroll.Size = UDim2.new(1, -24, 0, 140); sysScroll.Position = UDim2.new(0, 12, 0, 55); sysScroll.BackgroundTransparency = 1; sysScroll.BorderSizePixel = 0; sysScroll.ScrollBarThickness = 0; sysScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; sysScroll.CanvasSize = UDim2.new(0, 0, 0, 0); sysScroll.Parent = settingsPage
-local featScroll = Instance.new("ScrollingFrame"); featScroll.Size = UDim2.new(1, -24, 0, 140); featScroll.Position = UDim2.new(0, 12, 0, 55); featScroll.BackgroundTransparency = 1; featScroll.BorderSizePixel = 0; featScroll.ScrollBarThickness = 0; featScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; featScroll.CanvasSize = UDim2.new(0, 0, 0, 0); featScroll.Visible = false; featScroll.Parent = settingsPage
+local vMask = Instance.new("CanvasGroup"); vMask.Size = UDim2.new(1, -24, 0, 140); vMask.Position = UDim2.new(0, 12, 0, 55); vMask.BackgroundTransparency = 1; vMask.BorderSizePixel = 0; vMask.Parent = settingsPage
+local vGrad = Instance.new("UIGradient"); vGrad.Rotation = 90; vGrad.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.08, 0), NumberSequenceKeypoint.new(0.92, 0), NumberSequenceKeypoint.new(1, 1)}); vGrad.Parent = vMask
+
+local sysScroll = Instance.new("ScrollingFrame"); sysScroll.Size = UDim2.new(1, 0, 1, 0); sysScroll.BackgroundTransparency = 1; sysScroll.BorderSizePixel = 0; sysScroll.ScrollBarThickness = 0; sysScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; sysScroll.CanvasSize = UDim2.new(0, 0, 0, 0); sysScroll.Parent = vMask
+local featScroll = Instance.new("ScrollingFrame"); featScroll.Size = UDim2.new(1, 0, 1, 0); featScroll.BackgroundTransparency = 1; featScroll.BorderSizePixel = 0; featScroll.ScrollBarThickness = 0; featScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; featScroll.CanvasSize = UDim2.new(0, 0, 0, 0); featScroll.Visible = false; featScroll.Parent = vMask
 Instance.new("UIListLayout", sysScroll).Padding = UDim.new(0, 10); Instance.new("UIListLayout", featScroll).Padding = UDim.new(0, 10)
 local globalAccentColor = Color3.fromRGB(0, 162, 255)
 local activeModules = {}
@@ -213,8 +219,11 @@ local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter", featSc
 local btnDeepRam, knobDeepRam = createSwitch("Deep RAM Flush", featScroll)
 
 -- [[ THEMES SYSTEM ]]
-local themeTitle = Instance.new("TextLabel"); themeTitle.Size = UDim2.new(1, -24, 0, 22); themeTitle.Position = UDim2.new(0, 12, 0, 20); themeTitle.BackgroundTransparency = 1; themeTitle.Font = Enum.Font.SourceSansBold; themeTitle.TextColor3 = Color3.fromRGB(255, 255, 255); themeTitle.TextSize = 16; themeTitle.TextXAlignment = Enum.TextXAlignment.Center; themeTitle.Text = "耳MY THEMES耳"; themeTitle.Parent = themePage
-local themeScroll = Instance.new("ScrollingFrame"); themeScroll.Size = UDim2.new(1, -24, 0, 150); themeScroll.Position = UDim2.new(0, 12, 0, 50); themeScroll.BackgroundTransparency = 1; themeScroll.BorderSizePixel = 0; themeScroll.ScrollBarThickness = 2; themeScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255); themeScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; themeScroll.CanvasSize = UDim2.new(0, 0, 0, 0); themeScroll.Parent = themePage
+local themeTitle = Instance.new("TextLabel"); themeTitle.Size = UDim2.new(1, -24, 0, 22); themeTitle.Position = UDim2.new(0, 12, 0, 20); themeTitle.BackgroundTransparency = 1; themeTitle.Font = Enum.Font.SourceSansBold; themeTitle.TextColor3 = Color3.fromRGB(255, 255, 255); themeTitle.TextSize = 16; themeTitle.TextXAlignment = Enum.TextXAlignment.Center; themeTitle.Text = "MY THEMES"; themeTitle.Parent = themePage
+
+local tMask = Instance.new("CanvasGroup"); tMask.Size = UDim2.new(1, -24, 0, 150); tMask.Position = UDim2.new(0, 12, 0, 50); tMask.BackgroundTransparency = 1; tMask.BorderSizePixel = 0; tMask.Parent = themePage
+local tGrad = Instance.new("UIGradient"); tGrad.Rotation = 90; tGrad.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.08, 0), NumberSequenceKeypoint.new(0.92, 0), NumberSequenceKeypoint.new(1, 1)}); tGrad.Parent = tMask
+local themeScroll = Instance.new("ScrollingFrame"); themeScroll.Size = UDim2.new(1, 0, 1, 0); themeScroll.BackgroundTransparency = 1; themeScroll.BorderSizePixel = 0; themeScroll.ScrollBarThickness = 2; themeScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255); themeScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; themeScroll.CanvasSize = UDim2.new(0, 0, 0, 0); themeScroll.Parent = tMask
 local themeGrid = Instance.new("UIGridLayout"); themeGrid.CellSize = UDim2.new(0, 110, 0, 32); themeGrid.CellPadding = UDim2.new(0, 8, 0, 8); themeGrid.Parent = themeScroll
 
 local themes = {
@@ -363,16 +372,16 @@ bindSwitch(btnDistCull, knobDistCull, "DistCull", function(s) isDistCull = s; if
 bindSwitch(btnAnimLimit, knobAnimLimit, "AnimLim", function(s) isAnimLim = s; if not s then task.spawn(function() for _, v in ipairs(workspace:GetDescendants()) do if v:IsA("Humanoid") then v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer; for _, t in ipairs(v:GetPlayingAnimationTracks()) do if t.Speed == 0 then t:AdjustSpeed(1) end end end end end) end end)
 
 local function asyncProcessDescendants(cb) task.spawn(function() for i, v in ipairs(workspace:GetDescendants()) do pcall(cb, v); if i % 150 == 0 then RunService.Heartbeat:Wait() end end end) end
-bindToggle("BtnLowGfx", "LOW GFX: ON", "LOW GFX: OFF", function(s) isLow = s; asyncProcessDescendants(function(v) if v:IsA("BasePart") then v.Material = s and Enum.Material.SmoothPlastic or Enum.Material.Plastic end end) end)
+bindToggle("BtnLowGfx", "LOW GFX: OFF", "LOW GFX: ON", function(s) isLow = s; asyncProcessDescendants(function(v) if v:IsA("BasePart") then v.Material = s and Enum.Material.SmoothPlastic or Enum.Material.Plastic end end) end)
 bindToggle("BtnShadows", "SHADOWS: ON", "SHADOWS: OFF", function(s) isShdw = s; pcall(function() Lighting.GlobalShadows = s end) end)
 bindToggle("BtnCastS", "CAST-SHDW: ON", "CAST-SHDW: OFF", function(s) isCast = s; asyncProcessDescendants(function(v) if v:IsA("BasePart") then v.CastShadow = s end end) end)
-bindToggle("BtnTex", "TEXTURES: LOW", "TEXTURES: HIGH", function(s) isTex = s; asyncProcessDescendants(function(v) if v:IsA("Texture") or v:IsA("Decal") then v.Transparency = s and 1 or 0 end end) end)
-bindToggle("BtnPart", "PARTICLES: OFF", "PARTICLES: ON", function(s) isPart = s; asyncProcessDescendants(function(v) if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") then v.Enabled = not s end end) end)
+bindToggle("BtnTex", "TEXTURES: HIGH", "TEXTURES: LOW", function(s) isTex = s; asyncProcessDescendants(function(v) if v:IsA("Texture") or v:IsA("Decal") then v.Transparency = s and 1 or 0 end end) end)
+bindToggle("BtnPart", "PARTICLES: ON", "PARTICLES: OFF", function(s) isPart = s; asyncProcessDescendants(function(v) if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") then v.Enabled = not s end end) end)
 bindToggle("BtnHigh", "HIGHLIGHTS: ON", "HIGHLIGHTS: OFF", function(s) isHigh = s; asyncProcessDescendants(function(v) if v:IsA("Highlight") then v.Enabled = s end end) end)
 bindToggle("BtnWater", "WATER: HIGH", "WATER: LOW", function(s) isWater = s; pcall(function() local t = workspace.Terrain; t.WaterWaveSize = s and 0.15 or 0; t.WaterWaveSpeed = s and 10 or 0; t.WaterReflectance = s and 1 or 0 end) end)
 bindToggle("BtnGlow", "POST-FX: ON", "POST-FX: OFF", function(s) isGlow = s; asyncProcessDescendants(function(v) if v:IsA("PostEffect") then v.Enabled = s end end) end)
 bindToggle("BtnAudio", "3D AUDIO: ON", "3D AUDIO: OFF", function(s) isAud = s; pcall(function() game:GetService("SoundService").AmbientReverb = s and Enum.ReverbType.NoReverb or Enum.ReverbType.NoReverb end) end)
-bindToggle("Btn3d", "NO RENDER: ON", "NO RENDER: OFF", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
+bindToggle("Btn3d", "NO RENDER: OFF", "NO RENDER: ON", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
 table.insert(connections, btnRejoin.MouseButton1Click:Connect(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer) end))
 
 -- [[ WINDOW DRAGGING & MENU LOGIC ]]
@@ -513,7 +522,7 @@ end)
 
 table.insert(connections, btnCloseInfo.MouseButton1Click:Connect(function() TweenService:Create(infoOverlay, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play(); TweenService:Create(infoBody, TweenInfo.new(0.3), {TextTransparency = 1}):Play(); TweenService:Create(btnCloseInfo, TweenInfo.new(0.3), {BackgroundTransparency = 1, TextTransparency = 1}):Play(); task.delay(0.3, function() infoOverlay.Visible = false; contentContainer.Visible = true; isIntroPlaying = false end) end))
 
--- [[ INTRO SEQUENCE ]]
+-- [[ INTRO ]]
 screenGui.Parent = targetGui
 task.spawn(function()
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 130, 0, 130)}, 0.6); task.wait(0.5); TweenService:Create(introText, TweenInfo.new(0.6), {TextTransparency = 0}):Play(); task.wait(1.5); TweenService:Create(introText, TweenInfo.new(0.4), {TextTransparency = 1}):Play(); task.wait(0.3)
@@ -522,4 +531,3 @@ task.spawn(function()
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210)}, 0.5); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}, 0.5); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, 12)}, 0.5); task.wait(0.3)
     infoOverlay.Visible = true; if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true end
 end)
-
