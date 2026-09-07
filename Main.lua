@@ -328,7 +328,7 @@ table.insert(connections, btnAutoExec.MouseButton1Click:Connect(function()
     applyAppleTween(btnAutoExec, {BackgroundColor3 = autoExec and globalAccentColor or Color3.fromRGB(60, 60, 70)})
     applyAppleTween(knobAutoExec, {Position = autoExec and UDim2.new(0, 22, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)})
     local qot = (syn and syn.queue_on_teleport) or queue_on_teleport
-    if qot then qot([[loadstring(game:HttpGet("https://raw.githubusercontent.com/SyroxTech/FPS/main/script.lua"))()]]) end
+    if qot then qot([[loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))()]]) end
 end))
 
 -- RESTART SCRIPT HANDLER
