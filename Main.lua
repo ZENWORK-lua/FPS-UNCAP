@@ -148,16 +148,27 @@ local function createBtn(name, text, p)
     local btn = Instance.new("TextButton"); btn.Name = name; btn.BackgroundColor3 = Color3.fromRGB(30, 30, 40); btn.BackgroundTransparency = 0.3; btn.Font = Enum.Font.SourceSansBold; btn.Text = text; btn.TextColor3 = Color3.fromRGB(200, 200, 210); btn.TextSize = 11; btn.Parent = p or scrollFrame
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
     local str = Instance.new("UIStroke", btn); str.Color = Color3.fromRGB(255, 255, 255); str.Thickness = 1; str.Transparency = 0.8
-        btn.InputBegan:Connect(function(input)
+        local function createBtn(name, text, p)
+    local btn = Instance.new("TextButton"); btn.Name = name; btn.BackgroundColor3 = Color3.fromRGB(30, 30, 40); btn.BackgroundTransparency = 0.3; btn.Font = Enum.Font.SourceSansBold; btn.Text = text; btn.TextColor3 = Color3.fromRGB(200, 200, 210); btn.TextSize = 11; btn.Parent = p or scrollFrame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+    local str = Instance.new("UIStroke", btn); str.Color = Color3.fromRGB(255, 255, 255); str.Thickness = 1; str.Transparency = 0.8
+
+    -- UIGridLayout Engeli Aşan UIScale Büyüyüp Küçülme Motoru
+    local uiScale = Instance.new("UIScale", btn)
+    
+    btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            applyAppleTween(btn, {Size = UDim2.new(0, 108, 0, 25)}, 0.1)
+            applyAppleTween(uiScale, {Scale = 0.92}, 0.1) -- Basılınca %8 küçülür
         end
     end)
     btn.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            applyAppleTween(btn, {Size = UDim2.new(0, 115, 0, 28)}, 0.15)
+            applyAppleTween(uiScale, {Scale = 1}, 0.15) -- Bırakılınca eski boyutuna döner
         end
     end)
+
+    activeModules[name] = {Btn = btn, Stroke = str, IsActive = false}; return btn, str
+    end
     
     activeModules[name] = {Btn = btn, Stroke = str, IsActive = false}; return btn, str
 end
