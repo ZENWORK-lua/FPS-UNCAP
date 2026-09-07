@@ -1,4 +1,4 @@
--- HYPER|HUB - Ultimate iOS Fluid UI v16 (Save Engine & Core Fixes)
+-- HYPER|HUB - STABLE
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -17,7 +17,7 @@ end
 local targetGui = getSafeGuiParent()
 
 if env.SYROX_RUNNING and targetGui:FindFirstChild("FPSCapUI") then
-    pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "HYPERWORK", Text = "Script is already running, you can restart from settings.", Duration = 5}) end)
+    pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = "HYPERWORK", Text = "Script is already running.", Duration = 5}) end)
     return
 end
 
@@ -26,7 +26,7 @@ if targetGui:FindFirstChild("FPSCapUI") then targetGui.FPSCapUI:Destroy() end
 env.FPSCapUIConnections = {}; local connections = env.FPSCapUIConnections
 env.SYROX_RUNNING = true; env.SYROX_ORIGINAL_FFLAGS = {}
 
-
+-- REMEMBER CHANGES-NEW BTW
 env.HYPER_SAVE = {Remember = false, Toggles = {}, Switches = {}}
 if isfile and readfile and isfile("HYPER_HUB.json") then
     pcall(function() env.HYPER_SAVE = HttpService:JSONDecode(readfile("HYPER_HUB.json")) end)
@@ -53,7 +53,7 @@ afkScreen.Size = UDim2.new(1, 0, 1, 0); afkScreen.BackgroundColor3 = Color3.from
 afkScreen.ZIndex = 999; afkScreen.Visible = false; afkScreen.Parent = screenGui
 local afkText = Instance.new("TextLabel")
 afkText.Size = UDim2.new(1, 0, 1, 0); afkText.BackgroundTransparency = 1; afkText.Font = Enum.Font.GothamBold
-afkText.Text = "AFK Optimization activated.\nClick anywhere to stop"; afkText.TextColor3 = Color3.fromRGB(20, 20, 20); afkText.TextSize = 24; afkText.Parent = afkScreen
+afkText.Text = "AFK optimization activated.\nClick anywhere to stop"; afkText.TextColor3 = Color3.fromRGB(20, 20, 20); afkText.TextSize = 24; afkText.Parent = afkScreen
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"; mainFrame.Size = UDim2.new(0, 0, 0, 0); mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -72,7 +72,7 @@ local outerAura = Instance.new("Frame"); outerAura.Size = UDim2.new(1, 6, 1, 6);
 Instance.new("UICorner", outerAura).CornerRadius = UDim.new(0, 19)
 local auraStroke = Instance.new("UIStroke"); auraStroke.Color = Color3.fromRGB(0, 162, 255); auraStroke.Thickness = 1.2; auraStroke.Transparency = 1; auraStroke.Parent = outerAura
 
--- FİXLENMİŞ İZOLE HITBOX (Sadece Ortayı Kaplar)
+-- MENU
 local headerPillTouch = Instance.new("TextButton")
 headerPillTouch.Size = UDim2.new(0, 150, 0, 32); headerPillTouch.Position = UDim2.new(0.5, 0, 0, 0); headerPillTouch.AnchorPoint = Vector2.new(0.5, 0)
 headerPillTouch.BackgroundTransparency = 1; headerPillTouch.Text = ""; headerPillTouch.ZIndex = 50; headerPillTouch.Parent = mainFrame
@@ -115,7 +115,7 @@ local sliderFill = Instance.new("Frame"); sliderFill.Size = UDim2.new(initialRat
 local sliderKnob = Instance.new("Frame"); sliderKnob.Size = UDim2.new(0, 18, 0, 18); sliderKnob.Position = UDim2.new(initialRatio, -9, 0.5, -9); sliderKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255); sliderKnob.Parent = sliderTrack; Instance.new("UICorner", sliderKnob).CornerRadius = UDim.new(1, 0)
 local fpsDisplay = Instance.new("TextLabel"); fpsDisplay.Size = UDim2.new(1, -24, 0, 18); fpsDisplay.Position = UDim2.new(0, 12, 0, 42); fpsDisplay.BackgroundTransparency = 1; fpsDisplay.Font = Enum.Font.SourceSansSemibold; fpsDisplay.TextColor3 = Color3.fromRGB(160, 160, 175); fpsDisplay.TextSize = 13; fpsDisplay.TextXAlignment = Enum.TextXAlignment.Left; fpsDisplay.Text = "Current FPS: 0"; fpsDisplay.Parent = mainPage
 
--- FİXLENMİŞ SONSUZ KAYDIRMA
+-- MINOR FIX HERE😋
 local stabTitle = Instance.new("TextLabel"); stabTitle.Size = UDim2.new(1, -24, 0, 16); stabTitle.Position = UDim2.new(0, 12, 0, 110); stabTitle.BackgroundTransparency = 1; stabTitle.Font = Enum.Font.SourceSansBold; stabTitle.Text = "FEATURES (SWIPE RIGHT ->)"; stabTitle.TextColor3 = Color3.fromRGB(0, 200, 255); stabTitle.TextSize = 11; stabTitle.TextXAlignment = Enum.TextXAlignment.Left; stabTitle.Parent = mainPage
 local scrollFrame = Instance.new("ScrollingFrame"); scrollFrame.Size = UDim2.new(1, -24, 0, 65); scrollFrame.Position = UDim2.new(0, 12, 0, 130); scrollFrame.BackgroundTransparency = 1; scrollFrame.BorderSizePixel = 0; scrollFrame.ScrollBarThickness = 0; scrollFrame.ScrollingDirection = Enum.ScrollingDirection.X
 scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.X; scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0); scrollFrame.Parent = mainPage -- YENİ (OTOMATİK LİMİT)
@@ -171,9 +171,9 @@ end
 
 local btnRemember, knobRemember = createSwitch("Remember Changes", sysScroll)
 local btnMaxFps, knobMaxFps = createSwitch("Remove 500 FPS Limit", sysScroll)
-local btnAutoExec, knobAutoExec = createSwitch("Auto-Execute On Join", sysScroll)
+local btnAutoExec, knobAutoExec = createSwitch("Auto-Execute On Teleport", sysScroll)
 
--- DÜZELTİLMİŞ FASTFLAG EDİTÖR (Hizalama ve Tasarım)
+-- FASTFLAG EDITOR BUT STILL DOESNT WORK
 local ffContainer = Instance.new("Frame"); ffContainer.Size = UDim2.new(1, -8, 0, 48); ffContainer.BackgroundTransparency = 1; ffContainer.Parent = sysScroll
 local ffTitle = Instance.new("TextLabel"); ffTitle.Size = UDim2.new(1, 0, 0, 14); ffTitle.BackgroundTransparency = 1; ffTitle.Font = Enum.Font.SourceSansBold; ffTitle.Text = "FASTFLAG EDITOR"; ffTitle.TextColor3 = Color3.fromRGB(0, 162, 255); ffTitle.TextSize = 11; ffTitle.TextXAlignment = Enum.TextXAlignment.Left; ffTitle.Parent = ffContainer
 local fflagBg = Instance.new("Frame"); fflagBg.Size = UDim2.new(1, 0, 0, 30); fflagBg.Position = UDim2.new(0, 0, 0, 18); fflagBg.BackgroundTransparency = 1; fflagBg.Parent = ffContainer
@@ -181,14 +181,14 @@ local fflagInput = Instance.new("TextBox"); fflagInput.Size = UDim2.new(1, -55, 
 local btnApplyFf = Instance.new("TextButton"); btnApplyFf.Size = UDim2.new(0, 50, 1, 0); btnApplyFf.Position = UDim2.new(1, -50, 0, 0); btnApplyFf.BackgroundColor3 = Color3.fromRGB(0, 162, 255); btnApplyFf.Text = "APPLY"; btnApplyFf.Font = Enum.Font.SourceSansBold; btnApplyFf.TextColor3 = Color3.fromRGB(255, 255, 255); btnApplyFf.TextSize = 11; btnApplyFf.Parent = fflagBg; Instance.new("UICorner", btnApplyFf).CornerRadius = UDim.new(0, 6)
 table.insert(activeModules, {Btn = btnApplyFf, Stroke = Instance.new("UIStroke"), IsActive = true}); table.insert(activeModules, {Btn = ffTitle, Stroke = Instance.new("UIStroke"), IsActive = true})
 
--- GERÇEK RESTART BUTONU
+-- RESTART BUTTON😮
 local btnRestartScript = Instance.new("TextButton"); btnRestartScript.Size = UDim2.new(1, -8, 0, 30); btnRestartScript.BackgroundColor3 = Color3.fromRGB(180, 50, 50); btnRestartScript.Font = Enum.Font.SourceSansBold; btnRestartScript.Text = "RESTART SCRIPT"; btnRestartScript.TextColor3 = Color3.fromRGB(255, 255, 255); btnRestartScript.TextSize = 12; btnRestartScript.Parent = sysScroll; Instance.new("UICorner", btnRestartScript).CornerRadius = UDim.new(0, 8)
 table.insert(connections, btnRestartScript.MouseButton1Click:Connect(function() env.SYROX_RUNNING = false; if screenGui then screenGui:Destroy() end; pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPERWORK", Text="Restarting script...", Duration=2}) end); task.delay(0.5, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))() end) end))
 
-local btnAfk, knobAfk = createSwitch("AFK optimization Mode", featScroll)
+local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
-local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling(working on it)", featScroll)
-local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter(working on it)", featScroll)
+local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling(BETA)", featScroll)
+local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter(BETA)", featScroll)
 local btnDeepRam, knobDeepRam = createSwitch("Deep RAM Flush", featScroll)
 
 local themeTitle = Instance.new("TextLabel"); themeTitle.Size = UDim2.new(1, -24, 0, 22); themeTitle.Position = UDim2.new(0, 12, 0, 20); themeTitle.BackgroundTransparency = 1; themeTitle.Font = Enum.Font.SourceSansBold; themeTitle.TextColor3 = Color3.fromRGB(255, 255, 255); themeTitle.TextSize = 16; themeTitle.TextXAlignment = Enum.TextXAlignment.Center; themeTitle.Text = "PREMIUM THEMES"; themeTitle.Parent = themePage
@@ -221,14 +221,14 @@ table.insert(connections, btnTheme.MouseButton1Click:Connect(function() applyApp
 table.insert(connections, btnSettings.MouseButton1Click:Connect(function() applyAppleTween(btnSettings, {ImageTransparency = 0}, 0.1); openPage(settingsPage); task.delay(0.2, function() applyAppleTween(btnSettings, {ImageTransparency = 0.3}, 0.3) end) end))
 
 table.insert(connections, btnSysTab.MouseButton1Click:Connect(function()
-    btnSysTab.Text = "SYSTEM"; btnFeatTab.Text = "MORE"
+    btnSysTab.Text = "SYSTEM"; btnFeatTab.Text = "MRFT"
     applyAppleTween(btnSysTab, {Size = UDim2.new(0, 95, 1, 0)}); applyAppleTween(btnFeatTab, {Size = UDim2.new(0, 65, 1, 0), Position = UDim2.new(0, 95, 0, 0)})
     applyAppleTween(segmentSlider, {Size = UDim2.new(0, 95, 1, -4), Position = UDim2.new(0, 2, 0, 2)}, 0.3)
     btnSysTab.TextColor3 = Color3.fromRGB(255,255,255); btnFeatTab.TextColor3 = Color3.fromRGB(150,150,160)
     featScroll.Visible = false; sysScroll.Visible = true
 end))
 table.insert(connections, btnFeatTab.MouseButton1Click:Connect(function()
-    btnSysTab.Text = "SYS"; btnFeatTab.Text = "MORE FEATURES"
+    btnSysTab.Text = "SYTM"; btnFeatTab.Text = "MORE FEATURES"
     applyAppleTween(btnSysTab, {Size = UDim2.new(0, 45, 1, 0)}); applyAppleTween(btnFeatTab, {Size = UDim2.new(0, 115, 1, 0), Position = UDim2.new(0, 45, 0, 0)})
     applyAppleTween(segmentSlider, {Size = UDim2.new(0, 115, 1, -4), Position = UDim2.new(0, 45, 0, 2)}, 0.3)
     btnFeatTab.TextColor3 = Color3.fromRGB(255,255,255); btnSysTab.TextColor3 = Color3.fromRGB(150,150,160)
@@ -259,12 +259,12 @@ table.insert(connections, btnApplyFf.MouseButton1Click:Connect(function()
                 if setSuccess then game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPER|HUB", Text="FastFlag Applied: "..flag, Duration=3}); fflagInput.Text = "" end
             else game:GetService("StarterGui"):SetCore("SendNotification", {Title="ERROR", Text="Invalid FastFlag!", Duration=3}) end
         else game:GetService("StarterGui"):SetCore("SendNotification", {Title="ERROR", Text="Executor lacks FFlag support!", Duration=3}) end
-    else game:GetService("StarterGui"):SetCore("SendNotification", {Title="ERROR", Text="Format: FFlagName=Value", Duration=3}) end
+    else game:GetService("StarterGui"):SetCore("SendNotification", {Title="ERROR", Text="unknown error", Duration=3}) end
 end))
 local function handleSwitch(btn, knob, state) applyAppleTween(btn, {BackgroundColor3 = state and globalAccentColor or Color3.fromRGB(60, 60, 70)}); applyAppleTween(knob, {Position = state and UDim2.new(0, 22, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)}) end
 local function toggleSt(name, state, tOn, tOff) local m = activeModules[name]; m.IsActive = state; m.Btn.Text = state and tOn or tOff; applyAppleTween(m.Btn, {TextColor3 = state and globalAccentColor or Color3.fromRGB(200, 200, 210)}, 0.3); applyAppleTween(m.Stroke, {Color = state and globalAccentColor or Color3.fromRGB(255, 255, 255), Transparency = state and 0.5 or 0.8}, 0.3) end
 
-
+-- This remember what you do
 local function bindSwitch(btn, knob, swName, cb)
     local state = env.HYPER_SAVE.Switches[swName] or false; if state then handleSwitch(btn, knob, true); task.spawn(cb, true) end
     table.insert(connections, btn.MouseButton1Click:Connect(function() state = not state; handleSwitch(btn, knob, state); cb(state); env.HYPER_SAVE.Switches[swName] = state; env.saveHubData() end))
@@ -301,7 +301,7 @@ local currentState, isDraggingMoved, isIntroPlaying = 0, false, true
 local draggingPill = false; local pillDragStart, startPos = nil, nil
 local confirmStep = 0; local tapCount = 0
 
-
+-- MENU mechanics (i fixed hitbox)
 local function minimizeMenu() 
     currentState = 1; contentContainer.Visible = false
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44)})
