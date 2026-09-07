@@ -41,7 +41,7 @@ local origSettings = {
     WaterWaveSize = workspace.Terrain.WaterWaveSize, WaterWaveSpeed = workspace.Terrain.WaterWaveSpeed, WaterReflectance = workspace.Terrain.WaterReflectance
 }
 local MIN_FPS, MAX_FPS = 5, 500; local currentTargetFps = setfpscap and 120 or 60
-local function applyAppleTween(obj, props, dur) TweenService:Create(obj, TweenInfo.new(dur or 0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), props):Play() end
+local function applyAppleTween(obj, props, dur) TweenService:Create(obj, TweenInfo.new(dur or 0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), props):Play() end
 
 -- [[ UI: MAIN SCREENS ]]
 local screenGui = Instance.new("ScreenGui")
@@ -74,7 +74,7 @@ local auraStroke = Instance.new("UIStroke"); auraStroke.Color = Color3.fromRGB(0
 
 local introText = Instance.new("TextLabel")
 introText.Size = UDim2.new(1, 0, 1, 0); introText.BackgroundTransparency = 1; introText.Font = Enum.Font.GothamBold
-introText.Text = "HYPER|HUB"; introText.TextColor3 = Color3.fromRGB(255, 255, 255); introText.TextSize = 17; introText.TextTransparency = 1; introText.ZIndex = 100; introText.Parent = mainFrame
+introText.Text = "HYPER|FPS"; introText.TextColor3 = Color3.fromRGB(255, 255, 255); introText.TextSize = 17; introText.TextTransparency = 1; introText.ZIndex = 100; introText.Parent = mainFrame
 -- [[ EXTERNAL NAVIGATION ]]
 local extBtnClose = Instance.new("TextButton"); extBtnClose.Size = UDim2.new(0, 36, 0, 36); extBtnClose.AnchorPoint = Vector2.new(0.5, 0.5); extBtnClose.Position = UDim2.new(1, 30, 0, 24); extBtnClose.BackgroundColor3 = Color3.fromRGB(45, 45, 52)
 extBtnClose.Text = "×"; extBtnClose.Font = Enum.Font.GothamBold; extBtnClose.TextSize = 22; extBtnClose.TextColor3 = Color3.fromRGB(220, 220, 220); extBtnClose.Visible = false; extBtnClose.Parent = mainFrame
@@ -158,6 +158,7 @@ local featScroll = Instance.new("ScrollingFrame"); featScroll.Size = UDim2.new(1
 Instance.new("UIListLayout", sysScroll).Padding = UDim.new(0, 10); Instance.new("UIListLayout", featScroll).Padding = UDim.new(0, 10)
 local globalAccentColor = Color3.fromRGB(0, 162, 255)
 local activeModules = {}
+local switchRegistry = {}
 
 -- [[ MODULE BUILDER ]]
 local function createBtn(name, text, p)
@@ -207,8 +208,8 @@ table.insert(connections, btnRestartScript.MouseButton1Click:Connect(function() 
 
 local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
-local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling(BETA)", featScroll)
-local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter(BETA)", featScroll)
+local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling", featScroll)
+local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter", featScroll)
 local btnDeepRam, knobDeepRam = createSwitch("Deep RAM Flush", featScroll)
 
 -- [[ THEMES SYSTEM ]]
@@ -278,16 +279,29 @@ table.insert(connections, btnFeatTab.MouseButton1Click:Connect(function()
     sysScroll.Visible = false; featScroll.Visible = true
 end))
 
+local function tweenGradient(grad, c1, c2, duration)
+    local startC1, startC2 = grad.Color.Keypoints[1].Value, grad.Color.Keypoints[2].Value
+    local val = Instance.new("NumberValue"); val.Value = 0
+    local tw = TweenService:Create(val, TweenInfo.new(duration, Enum.EasingStyle.Sine), {Value = 1}); tw:Play()
+    local c; c = val.Changed:Connect(function(v)
+        grad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, startC1:Lerp(c1, v)), ColorSequenceKeypoint.new(1, startC2:Lerp(c2, v))})
+    end)
+    tw.Completed:Connect(function() c:Disconnect(); val:Destroy() end)
+end
+
 -- [[ THEME APPLICATION ]]
 for _, td in ipairs(themes) do
     local tb = Instance.new("TextButton"); tb.Size = UDim2.new(0, 110, 0, 32); tb.BackgroundColor3 = Color3.fromRGB(30, 30, 40); tb.BackgroundTransparency = 0.4; tb.Font = Enum.Font.GothamMedium; tb.Text = td.Name; tb.TextColor3 = td.Accent; tb.TextSize = 13; tb.Parent = themeScroll; Instance.new("UICorner", tb).CornerRadius = UDim.new(0, 8)
     local s = Instance.new("UIStroke", tb); s.Color = td.Accent; s.Transparency = 0.5; s.Thickness = 1
     local tsc = Instance.new("UIScale", tb); attachScaleHoldAnim(tb, tsc)
     table.insert(connections, tb.MouseButton1Click:Connect(function()
-        globalAccentColor = td.Accent; bgGradient.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, td.Bg1), ColorSequenceKeypoint.new(1, td.Bg2)})
-        applyAppleTween(auraStroke, {Color = td.Accent}); applyAppleTween(effectBarGlow, {BackgroundColor3 = td.Accent}); applyAppleTween(sliderFill, {BackgroundColor3 = td.Accent}); applyAppleTween(segmentSlider, {BackgroundColor3 = td.Accent})
-        stabTitle.TextColor3 = td.Accent; ffTitle.TextColor3 = td.Accent; btnApplyFf.BackgroundColor3 = td.Accent; btnTheme.ImageColor3 = td.Accent; btnSettings.ImageColor3 = td.Accent; fpsMonFrame.UIStroke.Color = td.Accent
-        for _, m in pairs(activeModules) do if m.IsActive then applyAppleTween(m.Btn, {TextColor3 = td.Accent}); applyAppleTween(m.Stroke, {Color = td.Accent}) end end
+        globalAccentColor = td.Accent; tweenGradient(bgGradient, td.Bg1, td.Bg2, 0.6)
+        applyAppleTween(auraStroke, {Color = td.Accent}, 0.6); applyAppleTween(effectBarGlow, {BackgroundColor3 = td.Accent}, 0.6)
+        applyAppleTween(sliderFill, {BackgroundColor3 = td.Accent}, 0.6); applyAppleTween(segmentSlider, {BackgroundColor3 = td.Accent}, 0.6)
+        applyAppleTween(stabTitle, {TextColor3 = td.Accent}, 0.6); applyAppleTween(ffTitle, {TextColor3 = td.Accent}, 0.6)
+        applyAppleTween(btnApplyFf, {BackgroundColor3 = td.Accent}, 0.6); applyAppleTween(fpsMonFrame.UIStroke, {Color = td.Accent}, 0.6)
+        for _, m in pairs(activeModules) do if m.IsActive then applyAppleTween(m.Btn, {TextColor3 = td.Accent}, 0.6); applyAppleTween(m.Stroke, {Color = td.Accent}, 0.6) end end
+        for _, sw in pairs(switchRegistry) do if sw.State then applyAppleTween(sw.Btn, {BackgroundColor3 = td.Accent}, 0.6) end end
     end))
 end
 
@@ -317,8 +331,14 @@ end
 local function toggleSt(name, state, tOn, tOff) local m = activeModules[name]; m.IsActive = state; m.Btn.Text = state and tOn or tOff; applyAppleTween(m.Btn, {TextColor3 = state and globalAccentColor or Color3.fromRGB(200, 200, 210)}, 0.3); applyAppleTween(m.Stroke, {Color = state and globalAccentColor or Color3.fromRGB(255, 255, 255), Transparency = state and 0.5 or 0.8}, 0.3) end
 
 local function bindSwitch(btn, knob, swName, cb)
-    local state = env.HYPER_SAVE.Switches[swName] or false; if state then handleSwitch(btn, knob, true); task.spawn(cb, true) end
-    table.insert(connections, btn.MouseButton1Click:Connect(function() state = not state; handleSwitch(btn, knob, state); cb(state); env.HYPER_SAVE.Switches[swName] = state; env.saveHubData() end))
+    switchRegistry[swName] = {Btn = btn, Knob = knob, State = env.HYPER_SAVE.Switches[swName] or false}
+    local state = switchRegistry[swName].State
+    if state then handleSwitch(btn, knob, true); task.spawn(cb, true) end
+    table.insert(connections, btn.MouseButton1Click:Connect(function() 
+        state = not state; switchRegistry[swName].State = state
+        handleSwitch(btn, knob, state); cb(state)
+        env.HYPER_SAVE.Switches[swName] = state; env.saveHubData() 
+    end))
 end
 local function bindToggle(name, tOn, tOff, cb)
     local m = activeModules[name]; if env.HYPER_SAVE.Toggles[name] then m.IsActive = true; toggleSt(name, true, tOn, tOff); task.spawn(cb, true) end
@@ -329,16 +349,18 @@ local unlockFps, autoExec, isAfkEngine, isDynRes, isDistCull, isAnimLim, isExtNa
 local isLow, isShdw, isCast, isTex, isPart, isHigh, isWater, isGlow, isAud, is3d = false, true, true, false, false, true, true, true, true, true
 local isDraggingMoved, isIntroPlaying = false, true
 local draggingPill = false; local pillDragStart, startPos = nil, nil
-local confirmStep = 0; local tapCount = 0
-
+local confirmStep = 0
 bindSwitch(btnNavPref, knobNavPref, "NavPref", function(s) isExtNav = s; if currentState == 0 then extBtnClose.Visible = s; extBtnMin.Visible = s end end)
 bindSwitch(btnFpsMon, knobFpsMon, "FpsMon", function(s) fpsMonFrame.Visible = s end)
 bindSwitch(btnRemember, knobRemember, "Remember", function(s) env.HYPER_SAVE.Remember = s; if not s and writefile then pcall(function() writefile("HYPER_HUB.json", HttpService:JSONEncode({Remember=false, Toggles={}, Switches={}})) end) else env.saveHubData() end end)
 bindSwitch(btnMaxFps, knobMaxFps, "MaxFps", function(s) unlockFps = s; MAX_FPS = s and 10000 or 500 end)
 bindSwitch(btnAutoExec, knobAutoExec, "AutoExec", function(s) autoExec = s; local qot = (syn and syn.queue_on_teleport) or queue_on_teleport; if qot then qot([[loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))()]]) end end)
 bindSwitch(btnAfk, knobAfk, "Afk", function(s) isAfkEngine = s; if s then pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPERWORK", Text="AFK Optimization Activated!", Duration=3}) end) end end)
-bindSwitch(btnDynRes, knobDynRes, "DynRes", function(s) isDynRes = s end); bindSwitch(btnDistCull, knobDistCull, "DistCull", function(s) isDistCull = s end); bindSwitch(btnAnimLimit, knobAnimLimit, "AnimLim", function(s) isAnimLim = s end)
-bindSwitch(btnDeepRam, knobDeepRam, "DeepRam", function(s) if s then task.wait(0.2); pcall(function() collectgarbage("collect") end); handleSwitch(btnDeepRam, knobDeepRam, false); env.HYPER_SAVE.Switches["DeepRam"] = false end end)
+bindSwitch(btnDynRes, knobDynRes, "DynRes", function(s) isDynRes = s end)
+bindSwitch(btnDeepRam, knobDeepRam, "DeepRam", function(s) if s then task.wait(0.2); pcall(function() collectgarbage("collect") end); handleSwitch(btnDeepRam, knobDeepRam, false); switchRegistry["DeepRam"].State = false; env.HYPER_SAVE.Switches["DeepRam"] = false end end)
+
+bindSwitch(btnDistCull, knobDistCull, "DistCull", function(s) isDistCull = s; if not s then task.spawn(function() for _, v in ipairs(workspace:GetDescendants()) do if v:IsA("BasePart") then v.LocalTransparencyModifier = 0 end end end) end end)
+bindSwitch(btnAnimLimit, knobAnimLimit, "AnimLim", function(s) isAnimLim = s; if not s then task.spawn(function() for _, v in ipairs(workspace:GetDescendants()) do if v:IsA("Humanoid") then v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer; for _, t in ipairs(v:GetPlayingAnimationTracks()) do if t.Speed == 0 then t:AdjustSpeed(1) end end end end end) end end)
 
 local function asyncProcessDescendants(cb) task.spawn(function() for i, v in ipairs(workspace:GetDescendants()) do pcall(cb, v); if i % 150 == 0 then RunService.Heartbeat:Wait() end end end) end
 bindToggle("BtnLowGfx", "LOW GFX: ON", "LOW GFX: OFF", function(s) isLow = s; asyncProcessDescendants(function(v) if v:IsA("BasePart") then v.Material = s and Enum.Material.SmoothPlastic or Enum.Material.Plastic end end) end)
@@ -352,39 +374,30 @@ bindToggle("BtnGlow", "POST-FX: ON", "POST-FX: OFF", function(s) isGlow = s; asy
 bindToggle("BtnAudio", "3D AUDIO: ON", "3D AUDIO: OFF", function(s) isAud = s; pcall(function() game:GetService("SoundService").AmbientReverb = s and Enum.ReverbType.NoReverb or Enum.ReverbType.NoReverb end) end)
 bindToggle("Btn3d", "NO RENDER: ON", "NO RENDER: OFF", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
 table.insert(connections, btnRejoin.MouseButton1Click:Connect(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer) end))
+
 -- [[ WINDOW DRAGGING & MENU LOGIC ]]
 local function minimizeMenu() 
     currentState = 1; contentContainer.Visible = false
     local cPos = mainFrame.Position
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset - 83)})
-    applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)})
-    applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)})
+    applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)})
     applyAppleTween(headerPillTouch, {Size = UDim2.new(1, 20, 1, 20), Position = UDim2.new(0.5, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5)}) 
     applyAppleTween(headerPill, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0.5, 0, 0.5, 0)}) 
-    if isExtNav then
-        extBtnClose.Visible = true; extBtnMin.Visible = false
-        applyAppleTween(extBtnClose, {Position = UDim2.new(1, 15, 0.5, 0)})
-    else extBtnClose.Visible = false; extBtnMin.Visible = false end
+    if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = false; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 35, 0.5, 0)}) else extBtnClose.Visible = false; extBtnMin.Visible = false end
 end
 local function maximizeMenu() 
     currentState = 0
     local cPos = mainFrame.Position
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset + 83)})
-    applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)})
-    applyAppleTween(outerAura, {Size = UDim2.new(1, 6, 1, 6)})
+    applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 6, 1, 6)})
     applyAppleTween(headerPillTouch, {Size = UDim2.new(0, 150, 0, 32), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -14 or 0)), AnchorPoint = Vector2.new(0.5, 0)}) 
     applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -6 or 12))}) 
-    if isExtNav then
-        extBtnClose.Visible = true; extBtnMin.Visible = true
-        applyAppleTween(extBtnClose, {Position = UDim2.new(1, 30, 0, 24)})
-        applyAppleTween(extBtnMin, {Position = UDim2.new(1, 30, 0, 64)})
-    end
+    if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 30, 0, 24)}); applyAppleTween(extBtnMin, {Position = UDim2.new(1, 30, 0, 64)}) end
     task.delay(0.1, function() if currentState == 0 then contentContainer.Visible = true end end) 
 end
 local function startCloseSequence() confirmStep = 1; confirmTitle.Text = "Do you want to close the script?"; openPage(confirmPage) end
 
-table.insert(connections, extBtnMin.MouseButton1Click:Connect(minimizeMenu))
-table.insert(connections, extBtnClose.MouseButton1Click:Connect(startCloseSequence))
+table.insert(connections, extBtnMin.MouseButton1Click:Connect(minimizeMenu)); table.insert(connections, extBtnClose.MouseButton1Click:Connect(startCloseSequence))
 table.insert(connections, btnConfirmNope.MouseButton1Click:Connect(function()
     if confirmStep == 1 then openPage(mainPage); confirmStep = 0
     elseif confirmStep == 2 then
@@ -403,24 +416,31 @@ table.insert(connections, UserInputService.InputChanged:Connect(function(input)
     if draggingPill and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
         local delta = input.Position - pillDragStart
         if math.abs(delta.X) > 10 or math.abs(delta.Y) > 10 then isDraggingMoved = true end 
-        local cam = workspace.CurrentCamera
-        local viewportSize = cam and cam.ViewportSize or Vector2.new(1920, 1080)
-        local frameSize = mainFrame.AbsoluteSize
-        local anchor = mainFrame.AnchorPoint
+        local cam = workspace.CurrentCamera; local viewportSize = cam and cam.ViewportSize or Vector2.new(1920, 1080)
+        local frameSize = mainFrame.AbsoluteSize; local anchor = mainFrame.AnchorPoint
         local rawX = startPos.X.Offset + delta.X; local rawY = startPos.Y.Offset + delta.Y
         local minX = (anchor.X * frameSize.X) - (viewportSize.X * 0.5); local maxX = (viewportSize.X * 0.5) - ((1 - anchor.X) * frameSize.X)
         local minY = (anchor.Y * frameSize.Y) - (viewportSize.Y * 0.5); local maxY = (viewportSize.Y * 0.5) - ((1 - anchor.Y) * frameSize.Y)
         mainFrame.Position = UDim2.new(startPos.X.Scale, math.clamp(rawX, minX, maxX), startPos.Y.Scale, math.clamp(rawY, minY, maxY))
     end
 end))
+
+local lastClickTime = 0
 table.insert(connections, headerPillTouch.InputEnded:Connect(function(input)
     if draggingPill and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
         draggingPill = false; 
         if not isDraggingMoved then
             if isExtNav and currentState == 0 then return end
-            tapCount = tapCount + 1
-            if tapCount == 1 then task.delay(0.25, function() if tapCount == 1 then if currentState == 0 then minimizeMenu() elseif currentState == 1 then maximizeMenu() end end; tapCount = 0 end)
-            elseif tapCount >= 2 then tapCount = 0; if currentState == 1 then startCloseSequence() end end
+            if currentState == 0 then minimizeMenu()
+            elseif currentState == 1 then
+                local now = os.clock()
+                if now - lastClickTime < 0.35 then
+                    lastClickTime = 0; maximizeMenu(); startCloseSequence()
+                else
+                    lastClickTime = now
+                    task.delay(0.36, function() if lastClickTime == now then maximizeMenu() end end)
+                end
+            end
         end
     end
 end))
@@ -432,8 +452,7 @@ table.insert(connections, UserInputService.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then 
         local pos, tPos, tSz = input.Position, sliderTrack.AbsolutePosition, sliderTrack.AbsoluteSize; 
         if pos.X >= tPos.X-15 and pos.X <= tPos.X+tSz.X+15 and pos.Y >= tPos.Y-20 and pos.Y <= tPos.Y+tSz.Y+20 then 
-            draggingSlider = true; updateSlider(pos.X);
-            applyAppleTween(sliderKnob, {Size = UDim2.new(0, 24, 0, 24), BackgroundTransparency = 0.5}, 0.15) 
+            draggingSlider = true; updateSlider(pos.X); applyAppleTween(sliderKnob, {Size = UDim2.new(0, 24, 0, 24), BackgroundTransparency = 0.5}, 0.15) 
         end 
     end 
 end))
@@ -466,7 +485,30 @@ table.insert(connections, RunService.RenderStepped:Connect(function()
 end))
 
 task.spawn(function()
-    while env.SYROX_RUNNING do task.wait(2); local lp = Players.LocalPlayer; local char = lp.Character; if char and char:FindFirstChild("HumanoidRootPart") then local pos = char.HumanoidRootPart.Position; for _, v in ipairs(workspace:GetDescendants()) do if v:IsA("BasePart") and isDistCull then local dist = (v.Position - pos).Magnitude; if dist > 200 then v.Material = Enum.Material.SmoothPlastic; v.CastShadow = false else v.Material = Enum.Material.Plastic; v.CastShadow = true end end; if v:IsA("Humanoid") and v.Parent ~= char and isAnimLim then if v.Parent:FindFirstChild("HumanoidRootPart") then local dist = (v.Parent.HumanoidRootPart.Position - pos).Magnitude; if dist > 120 then v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None else v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer end end end end end end
+    while env.SYROX_RUNNING do
+        task.wait(1)
+        if not isDistCull and not isAnimLim then continue end
+        local lp = Players.LocalPlayer; local char = lp.Character; local root = char and char:FindFirstChild("HumanoidRootPart")
+        if not root then continue end
+        local pos = root.Position; local count = 0
+        for _, v in ipairs(workspace:GetDescendants()) do
+            if isDistCull and v:IsA("BasePart") then
+                local dist = (v.Position - pos).Magnitude
+                if dist > 350 then v.LocalTransparencyModifier = 1
+                elseif dist > 150 then v.LocalTransparencyModifier = 0; v.Material = Enum.Material.SmoothPlastic; v.CastShadow = false
+                else v.LocalTransparencyModifier = 0 end
+            end
+            if isAnimLim and v:IsA("Humanoid") and v.Parent ~= char then
+                local pRoot = v.Parent:FindFirstChild("HumanoidRootPart") or v.Parent:FindFirstChild("Torso")
+                if pRoot then
+                    local dist = (pRoot.Position - pos).Magnitude
+                    if dist > 150 then v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None; for _, track in ipairs(v:GetPlayingAnimationTracks()) do track:AdjustSpeed(0) end
+                    else v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer; for _, track in ipairs(v:GetPlayingAnimationTracks()) do if track.Speed == 0 then track:AdjustSpeed(1) end end end
+                end
+            end
+            count = count + 1; if count % 200 == 0 then RunService.RenderStepped:Wait() end
+        end
+    end
 end)
 
 table.insert(connections, btnCloseInfo.MouseButton1Click:Connect(function() TweenService:Create(infoOverlay, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play(); TweenService:Create(infoBody, TweenInfo.new(0.3), {TextTransparency = 1}):Play(); TweenService:Create(btnCloseInfo, TweenInfo.new(0.3), {BackgroundTransparency = 1, TextTransparency = 1}):Play(); task.delay(0.3, function() infoOverlay.Visible = false; contentContainer.Visible = true; isIntroPlaying = false end) end))
@@ -480,3 +522,4 @@ task.spawn(function()
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210)}, 0.5); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}, 0.5); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, 12)}, 0.5); task.wait(0.3)
     infoOverlay.Visible = true; if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true end
 end)
+
