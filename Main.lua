@@ -191,7 +191,7 @@ local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling(BETA)",
 local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter(BETA)", featScroll)
 local btnDeepRam, knobDeepRam = createSwitch("Deep RAM Flush", featScroll)
 
-local themeTitle = Instance.new("TextLabel"); themeTitle.Size = UDim2.new(1, -24, 0, 22); themeTitle.Position = UDim2.new(0, 12, 0, 20); themeTitle.BackgroundTransparency = 1; themeTitle.Font = Enum.Font.SourceSansBold; themeTitle.TextColor3 = Color3.fromRGB(255, 255, 255); themeTitle.TextSize = 16; themeTitle.TextXAlignment = Enum.TextXAlignment.Center; themeTitle.Text = "PREMIUM THEMES"; themeTitle.Parent = themePage
+local themeTitle = Instance.new("TextLabel"); themeTitle.Size = UDim2.new(1, -24, 0, 22); themeTitle.Position = UDim2.new(0, 12, 0, 20); themeTitle.BackgroundTransparency = 1; themeTitle.Font = Enum.Font.SourceSansBold; themeTitle.TextColor3 = Color3.fromRGB(255, 255, 255); themeTitle.TextSize = 16; themeTitle.TextXAlignment = Enum.TextXAlignment.Center; themeTitle.Text = "🎨MY THEMES🎨"; themeTitle.Parent = themePage
 local themeScroll = Instance.new("ScrollingFrame"); themeScroll.Size = UDim2.new(1, -24, 0, 150); themeScroll.Position = UDim2.new(0, 12, 0, 50); themeScroll.BackgroundTransparency = 1; themeScroll.BorderSizePixel = 0; themeScroll.ScrollBarThickness = 2; themeScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255); themeScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y; themeScroll.CanvasSize = UDim2.new(0, 0, 0, 0); themeScroll.Parent = themePage
 local themeGrid = Instance.new("UIGridLayout"); themeGrid.CellSize = UDim2.new(0, 110, 0, 32); themeGrid.CellPadding = UDim2.new(0, 8, 0, 8); themeGrid.Parent = themeScroll
 
