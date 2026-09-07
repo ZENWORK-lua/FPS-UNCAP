@@ -196,14 +196,14 @@ local themeScroll = Instance.new("ScrollingFrame"); themeScroll.Size = UDim2.new
 local themeGrid = Instance.new("UIGridLayout"); themeGrid.CellSize = UDim2.new(0, 110, 0, 32); themeGrid.CellPadding = UDim2.new(0, 8, 0, 8); themeGrid.Parent = themeScroll
 
 local themes = {
-    {Name = "Aero Glass", Accent = Color3.fromRGB(0, 162, 255), Bg1 = Color3.fromRGB(45, 45, 52), Bg2 = Color3.fromRGB(10, 10, 15)},
-    {Name = "Crimson Frost", Accent = Color3.fromRGB(255, 40, 60), Bg1 = Color3.fromRGB(50, 20, 25), Bg2 = Color3.fromRGB(15, 5, 5)},
-    {Name = "Cyber Gold", Accent = Color3.fromRGB(255, 200, 30), Bg1 = Color3.fromRGB(50, 45, 30), Bg2 = Color3.fromRGB(15, 12, 5)},
-    {Name = "Neon Mint", Accent = Color3.fromRGB(0, 255, 150), Bg1 = Color3.fromRGB(20, 50, 40), Bg2 = Color3.fromRGB(5, 15, 10)},
-    {Name = "Plasma Purple", Accent = Color3.fromRGB(180, 50, 255), Bg1 = Color3.fromRGB(35, 20, 45), Bg2 = Color3.fromRGB(10, 5, 15)},
-    {Name = "Lava Orange", Accent = Color3.fromRGB(255, 100, 0), Bg1 = Color3.fromRGB(50, 25, 10), Bg2 = Color3.fromRGB(15, 5, 0)},
-    {Name = "Ghost White", Accent = Color3.fromRGB(230, 230, 240), Bg1 = Color3.fromRGB(60, 60, 65), Bg2 = Color3.fromRGB(25, 25, 30)},
-    {Name = "Toxic Slime", Accent = Color3.fromRGB(150, 255, 0), Bg1 = Color3.fromRGB(30, 40, 20), Bg2 = Color3.fromRGB(10, 15, 5)}
+    {Name = "Aura(default)", Accent = Color3.fromRGB(0, 162, 255), Bg1 = Color3.fromRGB(45, 45, 52), Bg2 = Color3.fromRGB(10, 10, 15)},
+    {Name = "bloody", Accent = Color3.fromRGB(255, 40, 60), Bg1 = Color3.fromRGB(50, 20, 25), Bg2 = Color3.fromRGB(15, 5, 5)},
+    {Name = "Gold Sun", Accent = Color3.fromRGB(255, 200, 30), Bg1 = Color3.fromRGB(50, 45, 30), Bg2 = Color3.fromRGB(15, 12, 5)},
+    {Name = "Fresh Mint", Accent = Color3.fromRGB(0, 255, 150), Bg1 = Color3.fromRGB(20, 50, 40), Bg2 = Color3.fromRGB(5, 15, 10)},
+    {Name = "Aubergine", Accent = Color3.fromRGB(180, 50, 255), Bg1 = Color3.fromRGB(35, 20, 45), Bg2 = Color3.fromRGB(10, 5, 15)},
+    {Name = "Volcano", Accent = Color3.fromRGB(255, 100, 0), Bg1 = Color3.fromRGB(50, 25, 10), Bg2 = Color3.fromRGB(15, 5, 0)},
+    {Name = "Ghosts", Accent = Color3.fromRGB(230, 230, 240), Bg1 = Color3.fromRGB(60, 60, 65), Bg2 = Color3.fromRGB(25, 25, 30)},
+    {Name = "Slimey", Accent = Color3.fromRGB(150, 255, 0), Bg1 = Color3.fromRGB(30, 40, 20), Bg2 = Color3.fromRGB(10, 15, 5)}
 }
 local confirmTitle = Instance.new("TextLabel"); confirmTitle.Size = UDim2.new(1, -24, 0, 45); confirmTitle.Position = UDim2.new(0, 12, 0, 40); confirmTitle.BackgroundTransparency = 1; confirmTitle.Font = Enum.Font.SourceSansBold; confirmTitle.TextWrapped = true; confirmTitle.TextColor3 = Color3.fromRGB(255, 255, 255); confirmTitle.TextSize = 15; confirmTitle.TextXAlignment = Enum.TextXAlignment.Center; confirmTitle.Text = "Do you want to close the script?"; confirmTitle.Parent = confirmPage
 local btnConfirmYes = Instance.new("TextButton"); btnConfirmYes.Size = UDim2.new(0, 100, 0, 32); btnConfirmYes.Position = UDim2.new(0.5, -110, 0, 115); btnConfirmYes.BackgroundColor3 = Color3.fromRGB(46, 204, 113); btnConfirmYes.Font = Enum.Font.SourceSansBold; btnConfirmYes.Text = "Yes"; btnConfirmYes.TextColor3 = Color3.fromRGB(255, 255, 255); btnConfirmYes.TextSize = 14; btnConfirmYes.Parent = confirmPage; Instance.new("UICorner", btnConfirmYes).CornerRadius = UDim.new(0, 8)
