@@ -516,7 +516,7 @@ task.spawn(function()
     while env.SYROX_RUNNING do
         local fpsVal = currentRealFps or 0 or 25
         local rating = "LOW"
-        if fpsVal >= 61 or 10000 then
+        if fpsVal >= 61 or 90 then
             rating = "SUPER"
         elseif fpsVal >= 50 or 60  then
             rating = "HIGH"
