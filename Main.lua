@@ -432,7 +432,7 @@ table.insert(connections, btnRestartScript.MouseButton1Click:Connect(function() 
 
 -- [[ SYSTEM INFO & PERFORMANCE PANEL ]]
 local infoCard = Instance.new("Frame")
-infoCard.Size = UDim2.new(1, -8, 0, 95)
+infoCard.Size = UDim2.new(1, -8, 0, 115) -- Paneli uzattık
 infoCard.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
 infoCard.BackgroundTransparency = 0.4
 infoCard.LayoutOrder = 9999
@@ -445,16 +445,16 @@ cardStroke.Thickness = 1
 cardStroke.Transparency = 0.5
 
 local cardList = Instance.new("UIListLayout", infoCard)
-cardList.Padding = UDim.new(0, 3)
+cardList.Padding = UDim.new(0, 2)
 cardList.SortOrder = Enum.SortOrder.LayoutOrder
 
 local cardPadding = Instance.new("UIPadding", infoCard)
 cardPadding.PaddingLeft = UDim.new(0, 8)
-cardPadding.PaddingTop = UDim.new(0, 6)
+cardPadding.PaddingTop = UDim.new(0, 5)
 
 local function createInfoLine(text, order)
     local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -16, 0, 15)
+    lbl.Size = UDim2.new(1, -16, 0, 14)
     lbl.BackgroundTransparency = 1
     lbl.Font = Enum.Font.SourceSansBold
     lbl.Text = text
@@ -466,17 +466,23 @@ local function createInfoLine(text, order)
     return lbl
 end
 
-createInfoLine("Version: 1.5 (testing)", 1)
-createInfoLine("Server ID: " .. tostring(game.JobId ~= "" and game.JobId or "12345"), 2)
-local perfLbl = createInfoLine("Performance Stats: Calculating...", 3)
-createInfoLine("Update Log: new 3 language support,Added information panel", 4)
+local tCurr = langData[currentLang] or langData.EN
+local lblVer = createInfoLine(tCurr.VersionTxt, 1)
+local lblServer = createInfoLine(string.format(tCurr.ServerIdTxt, tostring(game.JobId ~= "" and game.JobId or "12345")), 2)
+local perfLbl = createInfoLine(tCurr.PerfCalc, 3)
+
+-- Update Log 2 Satıra Bölündü (Taşma Engellendi)
+local lblLog1 = createInfoLine(tCurr.Log1, 4)
+local lblLog2 = createInfoLine(tCurr.Log2, 5)
+
+-- En Alttaki Sabit Kırmızı Discord Uyarısı
 local dLbl = Instance.new("TextLabel")
 dLbl.Name = "DiscordLabel"
 dLbl.Size = UDim2.new(1, -16, 0, 15)
-dLbl.Position = UDim2.new(0, 8, 1, -18) -- Kutunun en alt iç kısmına sabitler
+dLbl.Position = UDim2.new(0, 8, 1, -17)
 dLbl.BackgroundTransparency = 1
 dLbl.Font = Enum.Font.SourceSansBold
-dLbl.Text = "Report bugs on Discord: lowkeyzenith"
+dLbl.Text = tCurr.DiscordText
 dLbl.TextColor3 = Color3.fromRGB(255, 75, 75)
 dLbl.TextSize = 11
 dLbl.TextXAlignment = Enum.TextXAlignment.Left
@@ -486,18 +492,21 @@ dLbl.Parent = infoCard
 -- 30 Saniyelik Dinamik FPS Yargılama Mantığı
 task.spawn(function()
     while env.SYROX_RUNNING do
-        local fpsVal = currentRealFps or 60
+        local fpsVal = currentRealFps or 0 or 25
         local rating = "LOW"
-        if fpsVal >= 120 then
+        if fpsVal >= 61 or 10000 then
             rating = "SUPER"
-        elseif fpsVal >= 60 then
+        elseif fpsVal >= 50 or 60  then
             rating = "HIGH"
-        elseif fpsVal >= 30 then
+        elseif fpsVal >= 26 or 35 then
             rating = "MID"
         end
-        perfLbl.Text = string.format("Performance Stats: %s (%d FPS)", rating, fpsVal)
-        task.wait(30)
+        local activeT = langData[currentLang] or langData.EN
+        perfLbl.Text = string.format(activeT.PerfTxt, rating, fpsVal)
+        task.wait(15)
     end
+end)
+
 end)
 local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
