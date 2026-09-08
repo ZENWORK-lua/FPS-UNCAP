@@ -164,7 +164,7 @@ local function createSwitch(text, parent)
     return btn, knob, f
 end
 
--- [[ HYPER|HUB - COMPLETE MULTI-LANG MODULE (PART 1) ]]
+-- [[ HYPER|HUB - EXPANDABLE MULTI-LANG MODULE ]]
 local currentLang = env.HYPER_SAVE.Language or "EN"
 
 local langData = {
@@ -174,14 +174,12 @@ local langData = {
         TargetFps = "Target FPS: %d FPS", CurrentFps = "Current FPS: %d",
         FeaturesTitle = "FEATURES (SWIPE RIGHT ->)",
         
-        -- Switches
         Remember = "Remember Changes", MaxFps = "Remove 500 FPS Limit",
         AutoExec = "Auto-Execute On Teleport", ExtNav = "External Navigation",
         FpsMon = "Live FPS Monitor", Afk = "AFK Optimization",
         DynRes = "Dynamic Res Scaler (BETA)", DistCull = "Distance Quality Culling",
         AnimLim = "Distance Anim Limiter", DeepRam = "Deep RAM Flush",
         
-        -- Toggles / Buttons
         Rejoin = "REJOIN SERVER", GfxLvl = "GFX LVL: AUTO",
         LowGfx_OFF = "LOW GFX: OFF", LowGfx_ON = "LOW GFX: ON",
         Shadows_ON = "SHADOWS: ON", Shadows_OFF = "SHADOWS: OFF",
@@ -195,7 +193,6 @@ local langData = {
         Gui_OFF = "HIDE GUIS: OFF", Gui_ON = "HIDE GUIS: ON",
         Render3d_OFF = "NO RENDER: OFF", Render3d_ON = "NO RENDER: ON",
         
-        -- Overlays
         InfoTitle = "Information:\n\nTo close the script:\nFirst minimize the menu, then double-tap the circle icon.",
         CloseInfo = "Close this information", ConfirmClose = "Do you want to close the script?",
         ConfirmPersist = "Do you want the changes to persist?", Yes = "Yes", Nope = "Nope"
@@ -289,36 +286,63 @@ local langData = {
     }
 }
 
+-- KUTU AKORDİYON YAPISI (HİÇBİR ŞEYİ KESMEZ)
 local langFrame = Instance.new("Frame")
-langFrame.Size = UDim2.new(1, -8, 0, 30); langFrame.BackgroundTransparency = 1
-langFrame.LayoutOrder = -1; langFrame.Parent = sysScroll
+langFrame.Size = UDim2.new(1, -8, 0, 30)
+langFrame.BackgroundTransparency = 1
+langFrame.ClipsDescendants = true
+langFrame.Parent = sysScroll
+
+local langHeader = Instance.new("Frame")
+langHeader.Size = UDim2.new(1, 0, 0, 30)
+langHeader.BackgroundTransparency = 1
+langHeader.Parent = langFrame
 
 local langLabel = Instance.new("TextLabel")
-langLabel.Size = UDim2.new(0.4, 0, 1, 0); langLabel.BackgroundTransparency = 1
-langLabel.Font = Enum.Font.SourceSansBold; langLabel.Text = "Language / Dil:"
-langLabel.TextColor3 = Color3.fromRGB(200, 200, 210); langLabel.TextSize = 12; langLabel.TextXAlignment = Enum.TextXAlignment.Left; langLabel.Parent = langFrame
+langLabel.Size = UDim2.new(0.4, 0, 1, 0)
+langLabel.BackgroundTransparency = 1
+langLabel.Font = Enum.Font.SourceSansBold
+langLabel.Text = "Language / Dil:"
+langLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
+langLabel.TextSize = 12
+langLabel.TextXAlignment = Enum.TextXAlignment.Left
+langLabel.Parent = langHeader
 
 local langBtn = Instance.new("TextButton")
-langBtn.Size = UDim2.new(0.55, 0, 1, 0); langBtn.Position = UDim2.new(0.45, 0, 0, 0)
-langBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45); langBtn.Font = Enum.Font.SourceSansBold
-langBtn.Text = "English"; langBtn.TextColor3 = Color3.fromRGB(255, 255, 255); langBtn.TextSize = 12; langBtn.Parent = langFrame
+langBtn.Size = UDim2.new(0.55, 0, 1, 0)
+langBtn.Position = UDim2.new(0.45, 0, 0, 0)
+langBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+langBtn.Font = Enum.Font.SourceSansBold
+langBtn.Text = "English"
+langBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+langBtn.TextSize = 12
+langBtn.Parent = langHeader
 Instance.new("UICorner", langBtn).CornerRadius = UDim.new(0, 6)
-local langStroke = Instance.new("UIStroke", langBtn); langStroke.Color = Color3.fromRGB(60, 60, 70)
+local langStroke = Instance.new("UIStroke", langBtn)
+langStroke.Color = Color3.fromRGB(60, 60, 70)
 
 local langDropFrame = Instance.new("Frame")
-langDropFrame.Size = UDim2.new(0.55, 0, 0, 0); langDropFrame.Position = UDim2.new(0.45, 0, 1, 4)
-langDropFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35); langDropFrame.ClipsDescendants = true; langDropFrame.Visible = false; langDropFrame.ZIndex = 100; langDropFrame.Parent = langFrame
+langDropFrame.Size = UDim2.new(0.55, 0, 0, 100)
+langDropFrame.Position = UDim2.new(0.45, 0, 0, 34)
+langDropFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+langDropFrame.Parent = langFrame
 Instance.new("UICorner", langDropFrame).CornerRadius = UDim.new(0, 6)
 
-local langList = Instance.new("UIListLayout", langDropFrame); langList.SortOrder = Enum.SortOrder.LayoutOrder
-local languages = {{Code = "EN", Name = "English"}, {Code = "TR", Name = "Türkçe"}, {Code = "ES", Name = "Español"}, {Code = "RU", Name = "Русский"}}
--- [[ HYPER|HUB - COMPLETE MULTI-LANG MODULE (PART 2) ]]
+local langList = Instance.new("UIListLayout", langDropFrame)
+langList.SortOrder = Enum.SortOrder.LayoutOrder
+
+local languages = {
+    {Code = "EN", Name = "English"},
+    {Code = "TR", Name = "Türkçe"},
+    {Code = "ES", Name = "Español"},
+    {Code = "RU", Name = "Русский"}
+}
+
 local function updateLanguageUI(code)
     local t = langData[code] or langData.EN
     env.HYPER_SAVE.Language = code
     env.saveHubData()
 
-    -- Başlıklar ve Sekmeler
     if btnSysTab then btnSysTab.Text = t.SysTab end
     if btnFeatTab then btnFeatTab.Text = t.MoreTab end
     if themeTitle then themeTitle.Text = t.ThemeTitle end
@@ -326,13 +350,11 @@ local function updateLanguageUI(code)
     if btnRestartScript then btnRestartScript.Text = t.Restart end
     if dText then dText.Text = t.DiscordText end
     
-    -- Pencereler
     if infoBody then infoBody.Text = t.InfoTitle end
     if btnCloseInfo then btnCloseInfo.Text = t.CloseInfo end
     if btnConfirmYes then btnConfirmYes.Text = t.Yes end
     if btnConfirmNope then btnConfirmNope.Text = t.Nope end
 
-    -- Switch Etiketleri
     local function setSwitchLbl(btnObj, text)
         if btnObj and btnObj.Parent then
             local lbl = btnObj.Parent:FindFirstChildOfClass("TextLabel")
@@ -351,7 +373,6 @@ local function updateLanguageUI(code)
     setSwitchLbl(btnAnimLimit, t.AnimLim)
     setSwitchLbl(btnDeepRam, t.DeepRam)
 
-    -- Butonlar (Aktif/Pasif Durumlarına Göre Çeviri)
     if btnRejoin then btnRejoin.Text = t.Rejoin end
     
     local function updateModuleText(name, offText, onText)
@@ -378,22 +399,24 @@ end
 local isLangOpen = false
 table.insert(connections, langBtn.MouseButton1Click:Connect(function()
     isLangOpen = not isLangOpen
-    langDropFrame.Visible = true
-    applyAppleTween(langDropFrame, {Size = isLangOpen and UDim2.new(0.55, 0, 0, 100) or UDim2.new(0.55, 0, 0, 0)}, 0.25)
-    task.delay(isLangOpen and 0 or 0.25, function() langDropFrame.Visible = isLangOpen end)
+    -- Ana kutuyu genişleterek alttaki switch'leri aşağı iter
+    applyAppleTween(langFrame, {Size = isLangOpen and UDim2.new(1, -8, 0, 138) or UDim2.new(1, -8, 0, 30)}, 0.25)
 end))
 
 for _, l in ipairs(languages) do
     local optBtn = Instance.new("TextButton")
-    optBtn.Size = UDim2.new(1, 0, 0, 25); optBtn.BackgroundTransparency = 1
-    optBtn.Font = Enum.Font.SourceSansBold; optBtn.Text = l.Name
-    optBtn.TextColor3 = Color3.fromRGB(200, 200, 210); optBtn.TextSize = 11; optBtn.ZIndex = 101; optBtn.Parent = langDropFrame
+    optBtn.Size = UDim2.new(1, 0, 0, 25)
+    optBtn.BackgroundTransparency = 1
+    optBtn.Font = Enum.Font.SourceSansBold
+    optBtn.Text = l.Name
+    optBtn.TextColor3 = Color3.fromRGB(200, 200, 210)
+    optBtn.TextSize = 11
+    optBtn.Parent = langDropFrame
 
     table.insert(connections, optBtn.MouseButton1Click:Connect(function()
         langBtn.Text = l.Name
         isLangOpen = false
-        applyAppleTween(langDropFrame, {Size = UDim2.new(0.55, 0, 0, 0)}, 0.25)
-        task.delay(0.25, function() langDropFrame.Visible = false end)
+        applyAppleTween(langFrame, {Size = UDim2.new(1, -8, 0, 30)}, 0.25)
         updateLanguageUI(l.Code)
     end))
 end
@@ -402,7 +425,6 @@ for _, l in ipairs(languages) do
     if l.Code == currentLang then langBtn.Text = l.Name end
 end
 updateLanguageUI(currentLang)
-
 
 local btnRemember, knobRemember = createSwitch("Remember Changes", sysScroll)
 local btnMaxFps, knobMaxFps = createSwitch("Remove 500 FPS Limit", sysScroll)
