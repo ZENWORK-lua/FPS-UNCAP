@@ -469,7 +469,19 @@ end
 createInfoLine("Version: 1.5 (testing)", 1)
 createInfoLine("Server ID: " .. tostring(game.JobId ~= "" and game.JobId or "12345"), 2)
 local perfLbl = createInfoLine("Performance Stats: Calculating...", 3)
-createInfoLine("Update Log: new 3 language support, stability fix, bug fix", 4)
+createInfoLine("Update Log: new 3 language support,Added information panel", 4)
+local dLbl = Instance.new("TextLabel")
+dLbl.Name = "DiscordLabel"
+dLbl.Size = UDim2.new(1, -16, 0, 15)
+dLbl.Position = UDim2.new(0, 8, 1, -18) -- Kutunun en alt iç kısmına sabitler
+dLbl.BackgroundTransparency = 1
+dLbl.Font = Enum.Font.SourceSansBold
+dLbl.Text = "Report bugs on Discord: lowkeyzenith"
+dLbl.TextColor3 = Color3.fromRGB(255, 75, 75)
+dLbl.TextSize = 11
+dLbl.TextXAlignment = Enum.TextXAlignment.Left
+dLbl.ZIndex = 10
+dLbl.Parent = infoCard
 
 -- 30 Saniyelik Dinamik FPS Yargılama Mantığı
 task.spawn(function()
