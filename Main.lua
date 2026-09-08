@@ -163,7 +163,7 @@ end
 -- [[ HYPER|HUB - EXPANDABLE MULTI-LANG MODULE ]]
 local currentLang = env.HYPER_SAVE.Language or "EN"
 
-local langData = {
+ local langData = {
     EN = {
         SysTab = "SYSTEM", MoreTab = "MORE", ThemeTitle = "MY THEMES",
         Restart = "RESTART SCRIPT", DiscordText = "Report bugs on Discord: lowkeyzenith",
@@ -191,7 +191,11 @@ local langData = {
         
         InfoTitle = "Information:\n\nTo close the script:\nFirst minimize the menu, then double-tap the circle icon.",
         CloseInfo = "Close this information", ConfirmClose = "Do you want to close the script?",
-        ConfirmPersist = "Do you want the changes to persist?", Yes = "Yes", Nope = "Nope"
+        ConfirmPersist = "Do you want the changes to persist?", Yes = "Yes", Nope = "Nope",
+
+        VersionTxt = "Version: 1.5 (testing)", ServerIdTxt = "Server ID: %s",
+        PerfTxt = "Performance Stats: %s (%d FPS)", PerfCalc = "Performance Stats: Calculating...",
+        Log1 = "Update Log: added 3 language support,", Log2 = "added information panel, stability & bug fix."
     },
     TR = {
         SysTab = "SİSTEM", MoreTab = "DİĞER", ThemeTitle = "TEMALARIM",
@@ -220,7 +224,11 @@ local langData = {
         
         InfoTitle = "Bilgilendirme:\n\nScripti kapatmak için:\nÖnce menüyü küçültün, ardından yuvarlak simgeye çift dokunun.",
         CloseInfo = "Bilgilendirmeyi Kapat", ConfirmClose = "Scripti kapatmak istiyor musunuz?",
-        ConfirmPersist = "Değişiklikler kalıcı olsun mu?", Yes = "Evet", Nope = "Hayır"
+        ConfirmPersist = "Değişiklikler kalıcı olsun mu?", Yes = "Evet", Nope = "Hayır",
+
+        VersionTxt = "Sürüm: 1.5 (test)", ServerIdTxt = "Sunucu ID: %s",
+        PerfTxt = "Performans Durumu: %s (%d FPS)", PerfCalc = "Performans Durumu: Hesaplanıyor...",
+        Log1 = "Güncelleme Notu: 3 dil desteği eklendi,", Log2 = "bilgi paneli eklendi, kararlılık & hata düzeltmesi."
     },
     ES = {
         SysTab = "SISTEMA", MoreTab = "MÁS", ThemeTitle = "MIS TEMAS",
@@ -249,7 +257,11 @@ local langData = {
         
         InfoTitle = "Información:\n\nPara cerrar el script:\nPrimero minimice el menú, luego toque dos veces el ícono circular.",
         CloseInfo = "Cerrar esta información", ConfirmClose = "¿Quieres cerrar el script?",
-        ConfirmPersist = "¿Quieres que los cambios persistan?", Yes = "Sí", Nope = "No"
+        ConfirmPersist = "¿Quieres que los cambios persistan?", Yes = "Sí", Nope = "No",
+
+        VersionTxt = "Versión: 1.5 (pruebas)", ServerIdTxt = "ID de Servidor: %s",
+        PerfTxt = "Rendimiento: %s (%d FPS)", PerfCalc = "Rendimiento: Calculando...",
+        Log1 = "Notas: añadido soporte para 3 idiomas,", Log2 = "panel de información, corrección de errores."
     },
     RU = {
         SysTab = "СИСТЕМА", MoreTab = "ЕЩЕ", ThemeTitle = "МОИ ТЕМЫ",
@@ -278,8 +290,14 @@ local langData = {
         
         InfoTitle = "Информация:\n\nЧтобы закрыть скрипт:\nСначала сверните меню, затем дважды нажмите на круглую иконку.",
         CloseInfo = "Закрыть информацию", ConfirmClose = "Вы хотите закрыть скрипт?",
-        ConfirmPersist = "Сохранить изменения?", Yes = "Да", Nope = "Нет"
+        ConfirmPersist = "Сохранить изменения?", Yes = "Да", Nope = "Нет",
+
+        VersionTxt = "Версия: 1.5 (тест)", ServerIdTxt = "ID Сервера: %s",
+        PerfTxt = "Производительность: %s (%d FPS)", PerfCalc = "Производительность: Расчет...",
+        Log1 = "Обновления: добавлена поддержка 3 языков,", Log2 = "инфо-панель, исправления ошибок."
     }
+}
+
 }
 -- KUTU AKORDİYON YAPISI (HİÇBİR ŞEYİ KESMEZ)
 local langFrame = Instance.new("Frame")
@@ -344,7 +362,12 @@ local function updateLanguageUI(code)
     if stabTitle then stabTitle.Text = t.FeaturesTitle end
     if btnRestartScript then btnRestartScript.Text = t.Restart end
     if dText then dText.Text = t.DiscordText end
-    
+        if lblVer then lblVer.Text = t.VersionTxt end
+    if lblServer then lblServer.Text = string.format(t.ServerIdTxt, tostring(game.JobId ~= "" and game.JobId or "12345")) end
+    if lblLog1 then lblLog1.Text = t.Log1 end
+    if lblLog2 then lblLog2.Text = t.Log2 end
+    if dLbl then dLbl.Text = t.DiscordText end
+
     if infoBody then infoBody.Text = t.InfoTitle end
     if btnCloseInfo then btnCloseInfo.Text = t.CloseInfo end
     if btnConfirmYes then btnConfirmYes.Text = t.Yes end
