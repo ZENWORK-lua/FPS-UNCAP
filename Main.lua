@@ -1,4 +1,4 @@
--- [[ HYPER|HUB - STABLE VERSION ]]
+-- [[ HYPER|HUB - STABLE ]]
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -7,7 +7,7 @@ local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 
--- [[ CORE, ANTI-EXECUTE & MEMORY MANAGEMENT ]]
+-- 
 local env = (getgenv and getgenv()) or _G
 local function getSafeGuiParent()
     local p = nil; if gethui then pcall(function() p = gethui() end) end
@@ -26,7 +26,7 @@ if targetGui:FindFirstChild("FPSCapUI") then targetGui.FPSCapUI:Destroy() end
 env.FPSCapUIConnections = {}; local connections = env.FPSCapUIConnections
 env.SYROX_RUNNING = true
 
--- [[ DATA SAVING SYSTEM ]]
+-- [[ DATA SAVING ]]
 env.HYPER_SAVE = {Remember = false, Toggles = {}, Switches = {}}
 if isfile and readfile and isfile("HYPER_HUB.json") then pcall(function() env.HYPER_SAVE = HttpService:JSONDecode(readfile("HYPER_HUB.json")) end) end
 if not env.HYPER_SAVE.Toggles then env.HYPER_SAVE.Toggles = {} end
@@ -34,9 +34,9 @@ if not env.HYPER_SAVE.Switches then env.HYPER_SAVE.Switches = {} end
 env.saveHubData = function() if env.HYPER_SAVE.Remember and writefile then pcall(function() writefile("HYPER_HUB.json", HttpService:JSONEncode(env.HYPER_SAVE)) end) end end
 
 local origSettings = { GlobalShadows = Lighting.GlobalShadows, QualityLevel = settings().Rendering.QualityLevel, WaterWaveSize = workspace.Terrain.WaterWaveSize, WaterWaveSpeed = workspace.Terrain.WaterWaveSpeed, WaterReflectance = workspace.Terrain.WaterReflectance }
-local MIN_FPS, MAX_FPS = 5, 500; local currentTargetFps = setfpscap and 120 or 60
+local MIN_FPS, MAX_FPS = 5, 500; local currentTargetFps = setfpscap and 120
 local function applyAppleTween(obj, props, dur) TweenService:Create(obj, TweenInfo.new(dur or 0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), props):Play() end
--- [[ UI: MAIN SCREENS ]]
+-- [[ UI: MAIN ]]
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FPSCapUI"; screenGui.ResetOnSpawn = false; screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -277,13 +277,13 @@ local function asyncProcessDescendants(cb) task.spawn(function() for i, v in ipa
 bindToggle("BtnLowGfx", "LOW GFX: OFF", "LOW GFX: ON", function(s) isLow = s; asyncProcessDescendants(function(v) if v:IsA("BasePart") then v.Material = s and Enum.Material.SmoothPlastic or Enum.Material.Plastic end end) end)
 bindToggle("BtnShadows", "SHADOWS: ON", "SHADOWS: OFF", function(s) isShdw = s; pcall(function() Lighting.GlobalShadows = s end) end)
 bindToggle("BtnCastS", "CAST-SHDW: ON", "CAST-SHDW: OFF", function(s) isCast = s; asyncProcessDescendants(function(v) if v:IsA("BasePart") then v.CastShadow = s end end) end)
-bindToggle("BtnTex", "TEXTURES: HIGH", "TEXTURES: LOW", function(s) isTex = s; asyncProcessDescendants(function(v) if v:IsA("Texture") or v:IsA("Decal") then v.Transparency = s and 1 or 0 end end) end)
+bindToggle("BtnTex", "TEXTURES: LOW", "TEXTURES: HIGH", function(s) isTex = s; asyncProcessDescendants(function(v) if v:IsA("Texture") or v:IsA("Decal") then v.Transparency = s and 1 or 0 end end) end)
 bindToggle("BtnPart", "PARTICLES: ON", "PARTICLES: OFF", function(s) isPart = s; asyncProcessDescendants(function(v) if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") then v.Enabled = not s end end) end)
 bindToggle("BtnHigh", "HIGHLIGHTS: ON", "HIGHLIGHTS: OFF", function(s) isHigh = s; asyncProcessDescendants(function(v) if v:IsA("Highlight") then v.Enabled = s end end) end)
 bindToggle("BtnWater", "WATER: HIGH", "WATER: LOW", function(s) isWater = s; pcall(function() local t = workspace.Terrain; t.WaterWaveSize = s and 0.15 or 0; t.WaterWaveSpeed = s and 10 or 0; t.WaterReflectance = s and 1 or 0 end) end)
 bindToggle("BtnGlow", "POST-FX: ON", "POST-FX: OFF", function(s) isGlow = s; asyncProcessDescendants(function(v) if v:IsA("PostEffect") then v.Enabled = s end end) end)
 bindToggle("BtnAudio", "3D AUDIO: ON", "3D AUDIO: OFF", function(s) isAud = s; pcall(function() game:GetService("SoundService").AmbientReverb = s and Enum.ReverbType.NoReverb or Enum.ReverbType.NoReverb end) end)
-bindToggle("Btn3d", "NO RENDER: OFF", "NO RENDER: ON", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
+bindToggle("Btn3d", "NO RENDER: ON", "NO RENDER: OFF", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
 table.insert(connections, btnRejoin.MouseButton1Click:Connect(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer) end))
 
 local function minimizeMenu() currentState = 1; contentContainer.Visible = false; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset - 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(1, 20, 1, 20), Position = UDim2.new(0.5, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0.5, 0, 0.5, 0)}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = false; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 35, 0.5, 0)}) else extBtnClose.Visible = false; extBtnMin.Visible = false end end
