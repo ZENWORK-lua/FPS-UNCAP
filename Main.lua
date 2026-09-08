@@ -298,7 +298,6 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
     }
 }
 
-}
 -- KUTU AKORDİYON YAPISI (HİÇBİR ŞEYİ KESMEZ)
 local langFrame = Instance.new("Frame")
 langFrame.Size = UDim2.new(1, -8, 0, 30)
@@ -530,7 +529,6 @@ task.spawn(function()
     end
 end)
 
-end)
 local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
 local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling", featScroll)
