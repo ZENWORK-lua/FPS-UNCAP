@@ -46,7 +46,6 @@ afkScreen.ZIndex = 999; afkScreen.Visible = false; afkScreen.Parent = screenGui
 local afkText = Instance.new("TextLabel")
 afkText.Size = UDim2.new(1, 0, 1, 0); afkText.BackgroundTransparency = 1; afkText.Font = Enum.Font.GothamBold
 afkText.Text = "AFK optimization activated.\nClick anywhere to stop"; afkText.TextColor3 = Color3.fromRGB(20, 20, 20); afkText.TextSize = 24; afkText.Parent = afkScreen
-
 local fpsMonFrame = Instance.new("Frame"); fpsMonFrame.Size = UDim2.new(0, 100, 0, 26); fpsMonFrame.Position = UDim2.new(0.5, 0, 0, 10); fpsMonFrame.AnchorPoint = Vector2.new(0.5, 0); fpsMonFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25); fpsMonFrame.BackgroundTransparency = 0.4; fpsMonFrame.Visible = false; fpsMonFrame.Parent = screenGui
 Instance.new("UICorner", fpsMonFrame).CornerRadius = UDim.new(0, 8); Instance.new("UIStroke", fpsMonFrame).Color = Color3.fromRGB(0, 162, 255)
 local fpsMonText = Instance.new("TextLabel"); fpsMonText.Size = UDim2.new(1, 0, 1, 0); fpsMonText.BackgroundTransparency = 1; fpsMonText.Font = Enum.Font.GothamBold; fpsMonText.Text = "FPS: 60"; fpsMonText.TextColor3 = Color3.fromRGB(255, 255, 255); fpsMonText.TextSize = 13; fpsMonText.Parent = fpsMonFrame
@@ -84,7 +83,6 @@ local function attachScaleHoldAnim(btn, scaleObj)
     btn.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then applyAppleTween(scaleObj, {Scale = 1}, 0.25) end end)
 end
 attachScaleHoldAnim(extBtnClose, extCloseScale); attachScaleHoldAnim(extBtnMin, extMinScale)
-
 -- [[ UI: HEADER & CONTAINERS ]]
 local headerPillTouch = Instance.new("TextButton"); headerPillTouch.Size = UDim2.new(0, 150, 0, 32); headerPillTouch.Position = UDim2.new(0.5, 0, 0, 0); headerPillTouch.AnchorPoint = Vector2.new(0.5, 0); headerPillTouch.BackgroundTransparency = 1; headerPillTouch.Text = ""; headerPillTouch.ZIndex = 50; headerPillTouch.Parent = mainFrame
 local headerPill = Instance.new("Frame"); headerPill.Size = UDim2.new(0, 50, 0, 5); headerPill.Position = UDim2.new(0.5, 0, 0, 12); headerPill.AnchorPoint = Vector2.new(0.5, 0.5); headerPill.BackgroundColor3 = Color3.fromRGB(255, 255, 255); headerPill.BackgroundTransparency = 1; headerPill.ZIndex = 1; headerPill.Active = false; headerPill.Parent = mainFrame
@@ -117,7 +115,6 @@ local sliderKnob = Instance.new("Frame"); sliderKnob.Size = UDim2.new(0, 18, 0, 
 local fpsDisplay = Instance.new("TextLabel"); fpsDisplay.Size = UDim2.new(1, -24, 0, 18); fpsDisplay.Position = UDim2.new(0, 12, 0, 42); fpsDisplay.BackgroundTransparency = 1; fpsDisplay.Font = Enum.Font.SourceSansSemibold; fpsDisplay.TextColor3 = Color3.fromRGB(160, 160, 175); fpsDisplay.TextSize = 13; fpsDisplay.TextXAlignment = Enum.TextXAlignment.Left; fpsDisplay.Text = "Current FPS: 0"; fpsDisplay.Parent = mainPage
 
 local stabTitle = Instance.new("TextLabel"); stabTitle.Size = UDim2.new(1, -24, 0, 16); stabTitle.Position = UDim2.new(0, 12, 0, 110); stabTitle.BackgroundTransparency = 1; stabTitle.Font = Enum.Font.SourceSansBold; stabTitle.Text = "FEATURES (SWIPE RIGHT ->)"; stabTitle.TextColor3 = Color3.fromRGB(0, 200, 255); stabTitle.TextSize = 11; stabTitle.TextXAlignment = Enum.TextXAlignment.Left; stabTitle.Parent = mainPage
-
 local hMask = Instance.new("CanvasGroup"); hMask.Size = UDim2.new(1, -24, 0, 65); hMask.Position = UDim2.new(0, 12, 0, 130); hMask.BackgroundTransparency = 1; hMask.BorderSizePixel = 0; hMask.Parent = mainPage
 local hGrad = Instance.new("UIGradient"); hGrad.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.08, 0), NumberSequenceKeypoint.new(0.92, 0), NumberSequenceKeypoint.new(1, 1)}); hGrad.Parent = hMask
 local scrollFrame = Instance.new("ScrollingFrame"); scrollFrame.Size = UDim2.new(1, 0, 1, 0); scrollFrame.BackgroundTransparency = 1; scrollFrame.BorderSizePixel = 0; scrollFrame.ScrollBarThickness = 0; scrollFrame.ScrollingDirection = Enum.ScrollingDirection.X; scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.X; scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0); scrollFrame.Parent = hMask 
@@ -163,7 +160,6 @@ local function createSwitch(text, parent)
     Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
     return btn, knob, f
 end
-
 -- [[ HYPER|HUB - EXPANDABLE MULTI-LANG MODULE ]]
 local currentLang = env.HYPER_SAVE.Language or "EN"
 
@@ -285,7 +281,6 @@ local langData = {
         ConfirmPersist = "Сохранить изменения?", Yes = "Да", Nope = "Нет"
     }
 }
-
 -- KUTU AKORDİYON YAPISI (HİÇBİR ŞEYİ KESMEZ)
 local langFrame = Instance.new("Frame")
 langFrame.Size = UDim2.new(1, -8, 0, 30)
@@ -425,7 +420,6 @@ for _, l in ipairs(languages) do
     if l.Code == currentLang then langBtn.Text = l.Name end
 end
 updateLanguageUI(currentLang)
-
 local btnRemember, knobRemember = createSwitch("Remember Changes", sysScroll)
 local btnMaxFps, knobMaxFps = createSwitch("Remove 500 FPS Limit", sysScroll)
 local btnAutoExec, knobAutoExec = createSwitch("Auto-Execute On Teleport", sysScroll)
@@ -436,11 +430,63 @@ local btnRestartScript = Instance.new("TextButton"); btnRestartScript.Size = UDi
 local scaleRestart = Instance.new("UIScale", btnRestartScript); attachScaleHoldAnim(btnRestartScript, scaleRestart)
 table.insert(connections, btnRestartScript.MouseButton1Click:Connect(function() env.SYROX_RUNNING = false; if screenGui then screenGui:Destroy() end; pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPERWORK", Text="Restarting script...", Duration=2}) end); task.delay(0.5, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))() end) end))
 
-local discordFrame = Instance.new("Frame"); discordFrame.Size = UDim2.new(1, -8, 0, 22); discordFrame.BackgroundTransparency = 1; discordFrame.LayoutOrder = 9999; discordFrame.Parent = sysScroll
-local dCenter = Instance.new("Frame", discordFrame); dCenter.Size = UDim2.new(0, 195, 1, 0); dCenter.Position = UDim2.new(0.5, 0, 0, 0); dCenter.AnchorPoint = Vector2.new(0.5, 0); dCenter.BackgroundTransparency = 1
-local dIcon = Instance.new("ImageLabel", dCenter); dIcon.Size = UDim2.new(0, 16, 0, 16); dIcon.Position = UDim2.new(0, 0, 0.5, 0); dIcon.AnchorPoint = Vector2.new(0, 0.5); dIcon.BackgroundTransparency = 1; dIcon.Image = "rbxassetid://14896791845"; dIcon.ImageColor3 = Color3.fromRGB(130, 130, 140)
-local dText = Instance.new("TextLabel", dCenter); dText.Size = UDim2.new(1, -22, 1, 0); dText.Position = UDim2.new(0, 22, 0, 0); dText.BackgroundTransparency = 1; dText.Font = Enum.Font.SourceSansBold; dText.Text = "Report bugs on Discord: lowkeyzenith"; dText.TextColor3 = Color3.fromRGB(130, 130, 140); dText.TextSize = 11; dText.TextXAlignment = Enum.TextXAlignment.Left
+-- [[ SYSTEM INFO & PERFORMANCE PANEL ]]
+local infoCard = Instance.new("Frame")
+infoCard.Size = UDim2.new(1, -8, 0, 95)
+infoCard.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+infoCard.BackgroundTransparency = 0.4
+infoCard.LayoutOrder = 9999
+infoCard.Parent = sysScroll
+Instance.new("UICorner", infoCard).CornerRadius = UDim.new(0, 8)
 
+local cardStroke = Instance.new("UIStroke", infoCard)
+cardStroke.Color = Color3.fromRGB(50, 50, 65)
+cardStroke.Thickness = 1
+cardStroke.Transparency = 0.5
+
+local cardList = Instance.new("UIListLayout", infoCard)
+cardList.Padding = UDim.new(0, 3)
+cardList.SortOrder = Enum.SortOrder.LayoutOrder
+
+local cardPadding = Instance.new("UIPadding", infoCard)
+cardPadding.PaddingLeft = UDim.new(0, 8)
+cardPadding.PaddingTop = UDim.new(0, 6)
+
+local function createInfoLine(text, order)
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, -16, 0, 15)
+    lbl.BackgroundTransparency = 1
+    lbl.Font = Enum.Font.SourceSansBold
+    lbl.Text = text
+    lbl.TextColor3 = Color3.fromRGB(180, 180, 195)
+    lbl.TextSize = 11
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.LayoutOrder = order
+    lbl.Parent = infoCard
+    return lbl
+end
+
+createInfoLine("Version: 1.5 (testing)", 1)
+createInfoLine("Server ID: " .. tostring(game.JobId ~= "" and game.JobId or "12345"), 2)
+local perfLbl = createInfoLine("Performance Stats: Calculating...", 3)
+createInfoLine("Update Log: new 3 language support, stability fix, bug fix", 4)
+
+-- 30 Saniyelik Dinamik FPS Yargılama Mantığı
+task.spawn(function()
+    while env.SYROX_RUNNING do
+        local fpsVal = currentRealFps or 60
+        local rating = "LOW"
+        if fpsVal >= 120 then
+            rating = "SUPER"
+        elseif fpsVal >= 60 then
+            rating = "HIGH"
+        elseif fpsVal >= 30 then
+            rating = "MID"
+        end
+        perfLbl.Text = string.format("Performance Stats: %s (%d FPS)", rating, fpsVal)
+        task.wait(30)
+    end
+end)
 local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
 local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling", featScroll)
@@ -547,10 +593,8 @@ bindToggle("BtnGlow", "POST-FX: ON", "POST-FX: OFF", function(s) isGlow = s; asy
 bindToggle("BtnAudio", "3D AUDIO: ON", "3D AUDIO: OFF", function(s) isAud = s; pcall(function() game:GetService("SoundService").AmbientReverb = s and Enum.ReverbType.NoReverb or Enum.ReverbType.NoReverb end) end)
 bindToggle("Btn3d", "NO RENDER: ON", "NO RENDER: OFF", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
 table.insert(connections, btnRejoin.MouseButton1Click:Connect(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer) end))
-
-local function minimizeMenu() currentState = 1; contentContainer.Visible = false; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset - 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(1, 20, 1, 20), Position = UDim2.new(0.5, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0.5, 0, 0.5, 0)}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = false; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 35, 0.5, 0)}) else extBtnClose.Visible = false; extBtnMin.Visible = false end local function minimizeMenu() currentState = 1; contentContainer.Visible = false; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset - 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(1, 20, 1, 20), Position = UDim2.new(0.5, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0.5, 0, 0.5, 0)}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = false; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 35, 0.5, 0)}) else extBtnClose.Visible = false; extBtnMin.Visible = false end
-end
-local function maximizeMenu() currentState = 0; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset + 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 6, 1, 6)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(0, 150, 0, 32), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -14 or 0)), AnchorPoint = Vector2.new(0.5, 0)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -6 or 12))}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 30, 0, 24)}); applyAppleTween(extBtnMin, {Position = UDim2.new(1, 30, 0, 64)}) end; task.delay(0.1, function() if currentState == 0 then contentContainer.Visible = true end end) local function maximizeMenu() currentState = 0; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset + 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 6, 1, 6)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(0, 150, 0, 32), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -14 or 0)), AnchorPoint = Vector2.new(0.5, 0)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -6 or 12))}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 30, 0, 24)}); applyAppleTween(extBtnMin, {Position = UDim2.new(1, 30, 0, 64)}) end; task.delay(0.1, function() if currentState == 0 then contentContainer.Visible = true end end) end
+local function minimizeMenu() currentState = 1; contentContainer.Visible = false; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset - 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(1, 20, 1, 20), Position = UDim2.new(0.5, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0.5, 0, 0.5, 0)}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = false; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 35, 0.5, 0)}) else extBtnClose.Visible = false; extBtnMin.Visible = false end end
+local function maximizeMenu() currentState = 0; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset + 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 6, 1, 6)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(0, 150, 0, 32), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -14 or 0)), AnchorPoint = Vector2.new(0.5, 0)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -6 or 12))}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 30, 0, 24)}); applyAppleTween(extBtnMin, {Position = UDim2.new(1, 30, 0, 64)}) end; task.delay(0.1, function() if currentState == 0 then contentContainer.Visible = true end end) end
 
 
 -- [[ CLOSE ANIM & BUG FIX  ]]
