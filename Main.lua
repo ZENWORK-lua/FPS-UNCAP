@@ -310,8 +310,6 @@ for _, l in ipairs(languages) do
     if l.Code == currentLang then langBtn.Text = l.Name end
 end
 updateLanguageUI(currentLang)
-
-
 local btnRemember, knobRemember = createSwitch("Remember Changes", sysScroll)
 local btnMaxFps, knobMaxFps = createSwitch("Remove 500 FPS Limit", sysScroll)
 local btnAutoExec, knobAutoExec = createSwitch("Auto-Execute On Teleport", sysScroll)
