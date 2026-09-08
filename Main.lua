@@ -164,6 +164,246 @@ local function createSwitch(text, parent)
     return btn, knob, f
 end
 
+-- [[ HYPER|HUB - COMPLETE MULTI-LANG MODULE (PART 1) ]]
+local currentLang = env.HYPER_SAVE.Language or "EN"
+
+local langData = {
+    EN = {
+        SysTab = "SYSTEM", MoreTab = "MORE", ThemeTitle = "MY THEMES",
+        Restart = "RESTART SCRIPT", DiscordText = "Report bugs on Discord: lowkeyzenith",
+        TargetFps = "Target FPS: %d FPS", CurrentFps = "Current FPS: %d",
+        FeaturesTitle = "FEATURES (SWIPE RIGHT ->)",
+        
+        -- Switches
+        Remember = "Remember Changes", MaxFps = "Remove 500 FPS Limit",
+        AutoExec = "Auto-Execute On Teleport", ExtNav = "External Navigation",
+        FpsMon = "Live FPS Monitor", Afk = "AFK Optimization",
+        DynRes = "Dynamic Res Scaler (BETA)", DistCull = "Distance Quality Culling",
+        AnimLim = "Distance Anim Limiter", DeepRam = "Deep RAM Flush",
+        
+        -- Toggles / Buttons
+        Rejoin = "REJOIN SERVER", GfxLvl = "GFX LVL: AUTO",
+        LowGfx_OFF = "LOW GFX: OFF", LowGfx_ON = "LOW GFX: ON",
+        Shadows_ON = "SHADOWS: ON", Shadows_OFF = "SHADOWS: OFF",
+        CastS_ON = "CAST-SHDW: ON", CastS_OFF = "CAST-SHDW: OFF",
+        Tex_HIGH = "TEXTURES: HIGH", Tex_LOW = "TEXTURES: LOW",
+        Part_ON = "PARTICLES: ON", Part_OFF = "PARTICLES: OFF",
+        High_ON = "HIGHLIGHTS: ON", High_OFF = "HIGHLIGHTS: OFF",
+        Water_HIGH = "WATER: HIGH", Water_LOW = "WATER: LOW",
+        Glow_ON = "POST-FX: ON", Glow_OFF = "POST-FX: OFF",
+        Audio_ON = "3D AUDIO: ON", Audio_OFF = "3D AUDIO: OFF",
+        Gui_OFF = "HIDE GUIS: OFF", Gui_ON = "HIDE GUIS: ON",
+        Render3d_OFF = "NO RENDER: OFF", Render3d_ON = "NO RENDER: ON",
+        
+        -- Overlays
+        InfoTitle = "Information:\n\nTo close the script:\nFirst minimize the menu, then double-tap the circle icon.",
+        CloseInfo = "Close this information", ConfirmClose = "Do you want to close the script?",
+        ConfirmPersist = "Do you want the changes to persist?", Yes = "Yes", Nope = "Nope"
+    },
+    TR = {
+        SysTab = "SİSTEM", MoreTab = "DİĞER", ThemeTitle = "TEMALARIM",
+        Restart = "SCRİPT'İ YENİDEN BAŞLAT", DiscordText = "Hataları Discord'dan bildirin: lowkeyzenith",
+        TargetFps = "Hedef FPS: %d FPS", CurrentFps = "Mevcut FPS: %d",
+        FeaturesTitle = "ÖZELLİKLER (SAĞA KAYDIR ->)",
+        
+        Remember = "Değişiklikleri Hatırla", MaxFps = "500 FPS Sınırını Kaldır",
+        AutoExec = "Işınlanmada Oto-Çalıştır", ExtNav = "Harici Gezinme",
+        FpsMon = "Canlı FPS Monitörü", Afk = "AFK Optimizasyonu",
+        DynRes = "Dinamik Çözünürlük (BETA)", DistCull = "Mesafe Kalite Filtresi",
+        AnimLim = "Mesafe Animasyon Sınırı", DeepRam = "Derin RAM Temizliği",
+        
+        Rejoin = "SUNUCUYA YENİDEN KATIL", GfxLvl = "GFX SEVİYE: OTO",
+        LowGfx_OFF = "DÜŞÜK GFX: KAPALI", LowGfx_ON = "DÜŞÜK GFX: AÇIK",
+        Shadows_ON = "GÖLGELER: AÇIK", Shadows_OFF = "GÖLGELER: KAPALI",
+        CastS_ON = "GÖLGE DÜŞÜRME: AÇIK", CastS_OFF = "GÖLGE DÜŞÜRME: KAPALI",
+        Tex_HIGH = "DOKULAR: YÜKSEK", Tex_LOW = "DOKULAR: DÜŞÜK",
+        Part_ON = "PARÇACIKLAR: AÇIK", Part_OFF = "PARÇACIKLAR: KAPALI",
+        High_ON = "VURGULAR: AÇIK", High_OFF = "VURGULAR: KAPALI",
+        Water_HIGH = "SU KALİTESİ: YÜKSEK", Water_LOW = "SU KALİTESİ: DÜŞÜK",
+        Glow_ON = "EFEKTLER: AÇIK", Glow_OFF = "EFEKTLER: KAPALI",
+        Audio_ON = "3D SES: AÇIK", Audio_OFF = "3D SES: KAPALI",
+        Gui_OFF = "ARAYÜZ HİZALA: KAPALI", Gui_ON = "ARAYÜZ HİZALA: AÇIK",
+        Render3d_OFF = "RENDER YOK: KAPALI", Render3d_ON = "RENDER YOK: AÇIK",
+        
+        InfoTitle = "Bilgilendirme:\n\nScripti kapatmak için:\nÖnce menüyü küçültün, ardından yuvarlak simgeye çift dokunun.",
+        CloseInfo = "Bilgilendirmeyi Kapat", ConfirmClose = "Scripti kapatmak istiyor musunuz?",
+        ConfirmPersist = "Değişiklikler kalıcı olsun mu?", Yes = "Evet", Nope = "Hayır"
+    },
+    ES = {
+        SysTab = "SISTEMA", MoreTab = "MÁS", ThemeTitle = "MIS TEMAS",
+        Restart = "REINICIAR SCRIPT", DiscordText = "Reportar errores en Discord: lowkeyzenith",
+        TargetFps = "FPS Objetivo: %d FPS", CurrentFps = "FPS Actual: %d",
+        FeaturesTitle = "FUNCIONES (DESLIZA DERECHA ->)",
+        
+        Remember = "Recordar Cambios", MaxFps = "Sin Límite de 500 FPS",
+        AutoExec = "Auto-Ejecutar al Teletransportar", ExtNav = "Navegación Externa",
+        FpsMon = "Monitor de FPS en Vivo", Afk = "Optimización AFK",
+        DynRes = "Escalador Dinámico (BETA)", DistCull = "Filtro por Distancia",
+        AnimLim = "Limitador de Animación", DeepRam = "Limpieza Profunda de RAM",
+        
+        Rejoin = "REUNIRSE AL SERVIDOR", GfxLvl = "NIVEL GFX: AUTO",
+        LowGfx_OFF = "GFX BAJO: OFF", LowGfx_ON = "GFX BAJO: ON",
+        Shadows_ON = "SOMBRAS: ON", Shadows_OFF = "SOMBRAS: OFF",
+        CastS_ON = "PROYECTAR SOMBRAS: ON", CastS_OFF = "PROYECTAR SOMBRAS: OFF",
+        Tex_HIGH = "TEXTURAS: ALTAS", Tex_LOW = "TEXTURAS: BAJAS",
+        Part_ON = "PARTÍCULAS: ON", Part_OFF = "PARTÍCULAS: OFF",
+        High_ON = "DESTACADOS: ON", High_OFF = "DESTACADOS: OFF",
+        Water_HIGH = "AGUA: ALTA", Water_LOW = "AGUA: BAJA",
+        Glow_ON = "POST-FX: ON", Glow_OFF = "POST-FX: OFF",
+        Audio_ON = "AUDIO 3D: ON", Audio_OFF = "AUDIO 3D: OFF",
+        Gui_OFF = "OCULTAR GUIS: OFF", Gui_ON = "OCULTAR GUIS: ON",
+        Render3d_OFF = "SIN RENDER: OFF", Render3d_ON = "SIN RENDER: ON",
+        
+        InfoTitle = "Información:\n\nPara cerrar el script:\nPrimero minimice el menú, luego toque dos veces el ícono circular.",
+        CloseInfo = "Cerrar esta información", ConfirmClose = "¿Quieres cerrar el script?",
+        ConfirmPersist = "¿Quieres que los cambios persistan?", Yes = "Sí", Nope = "No"
+    },
+    RU = {
+        SysTab = "СИСТЕМА", MoreTab = "ЕЩЕ", ThemeTitle = "МОИ ТЕМЫ",
+        Restart = "ПЕРЕЗАПУСТИТЬ СКРИПТ", DiscordText = "Ошибки в Discord: lowkeyzenith",
+        TargetFps = "Целевой FPS: %d FPS", CurrentFps = "Текущий FPS: %d",
+        FeaturesTitle = "ФУНКЦИИ (СМАЙП ВПРАВО ->)",
+        
+        Remember = "Запомнить Изменения", MaxFps = "Снять Лимит 500 FPS",
+        AutoExec = "Авто-Запуск при Телепорте", ExtNav = "Внешняя Навигация",
+        FpsMon = "Монитор FPS", Afk = "Оптимизация AFK",
+        DynRes = "Динамическое Разрешение", DistCull = "Фильтр Дальности",
+        AnimLim = "Ограничитель Анимаций", DeepRam = "Глубокая Очистка ОЗУ",
+        
+        Rejoin = "ПЕРЕПОДКЛЮЧИТЬСЯ", GfxLvl = "ГРАФИКА: АВТО",
+        LowGfx_OFF = "НИЗК. ГРАФИКА: ВЫКЛ", LowGfx_ON = "НИЗК. ГРАФИКА: ВКЛ",
+        Shadows_ON = "ТЕНИ: ВКЛ", Shadows_OFF = "ТЕНИ: ВЫКЛ",
+        CastS_ON = "ОТБРАСЫВАТЬ ТЕНИ: ВКЛ", CastS_OFF = "ОТБРАСЫВАТЬ ТЕНИ: ВЫКЛ",
+        Tex_HIGH = "ТЕКСТУРЫ: ВЫСОКИЕ", Tex_LOW = "ТЕКСТУРЫ: НИЗКИЕ",
+        Part_ON = "ЧАСТИЦЫ: ВКЛ", Part_OFF = "ЧАСТИЦЫ: ВЫКЛ",
+        High_ON = "ПОДСВЕТКА: ВКЛ", High_OFF = "ПОДСВЕТКА: ВЫКЛ",
+        Water_HIGH = "ВОДА: ВЫСОКАЯ", Water_LOW = "ВОДА: НИЗКАЯ",
+        Glow_ON = "ПОСТ-ЭФФЕКТЫ: ВКЛ", Glow_OFF = "ПОСТ-ЭФФЕКТЫ: ВЫКЛ",
+        Audio_ON = "3D ЗВУК: ВКЛ", Audio_OFF = "3D ЗВУК: ВЫКЛ",
+        Gui_OFF = "СКРЫТЬ GUI: ВЫКЛ", Gui_ON = "СКРЫТЬ GUI: ВКЛ",
+        Render3d_OFF = "БЕЗ РЕНДЕРА: ВЫКЛ", Render3d_ON = "БЕЗ РЕНДЕРА: ВКЛ",
+        
+        InfoTitle = "Информация:\n\nЧтобы закрыть скрипт:\nСначала сверните меню, затем дважды нажмите на круглую иконку.",
+        CloseInfo = "Закрыть информацию", ConfirmClose = "Вы хотите закрыть скрипт?",
+        ConfirmPersist = "Сохранить изменения?", Yes = "Да", Nope = "Нет"
+    }
+}
+
+local langFrame = Instance.new("Frame")
+langFrame.Size = UDim2.new(1, -8, 0, 30); langFrame.BackgroundTransparency = 1
+langFrame.LayoutOrder = -1; langFrame.Parent = sysScroll
+
+local langLabel = Instance.new("TextLabel")
+langLabel.Size = UDim2.new(0.4, 0, 1, 0); langLabel.BackgroundTransparency = 1
+langLabel.Font = Enum.Font.SourceSansBold; langLabel.Text = "Language / Dil:"
+langLabel.TextColor3 = Color3.fromRGB(200, 200, 210); langLabel.TextSize = 12; langLabel.TextXAlignment = Enum.TextXAlignment.Left; langLabel.Parent = langFrame
+
+local langBtn = Instance.new("TextButton")
+langBtn.Size = UDim2.new(0.55, 0, 1, 0); langBtn.Position = UDim2.new(0.45, 0, 0, 0)
+langBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45); langBtn.Font = Enum.Font.SourceSansBold
+langBtn.Text = "English"; langBtn.TextColor3 = Color3.fromRGB(255, 255, 255); langBtn.TextSize = 12; langBtn.Parent = langFrame
+Instance.new("UICorner", langBtn).CornerRadius = UDim.new(0, 6)
+local langStroke = Instance.new("UIStroke", langBtn); langStroke.Color = Color3.fromRGB(60, 60, 70)
+
+local langDropFrame = Instance.new("Frame")
+langDropFrame.Size = UDim2.new(0.55, 0, 0, 0); langDropFrame.Position = UDim2.new(0.45, 0, 1, 4)
+langDropFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35); langDropFrame.ClipsDescendants = true; langDropFrame.Visible = false; langDropFrame.ZIndex = 100; langDropFrame.Parent = langFrame
+Instance.new("UICorner", langDropFrame).CornerRadius = UDim.new(0, 6)
+
+local langList = Instance.new("UIListLayout", langDropFrame); langList.SortOrder = Enum.SortOrder.LayoutOrder
+local languages = {{Code = "EN", Name = "English"}, {Code = "TR", Name = "Türkçe"}, {Code = "ES", Name = "Español"}, {Code = "RU", Name = "Русский"}}
+-- [[ HYPER|HUB - COMPLETE MULTI-LANG MODULE (PART 2) ]]
+local function updateLanguageUI(code)
+    local t = langData[code] or langData.EN
+    env.HYPER_SAVE.Language = code
+    env.saveHubData()
+
+    -- Başlıklar ve Sekmeler
+    if btnSysTab then btnSysTab.Text = t.SysTab end
+    if btnFeatTab then btnFeatTab.Text = t.MoreTab end
+    if themeTitle then themeTitle.Text = t.ThemeTitle end
+    if stabTitle then stabTitle.Text = t.FeaturesTitle end
+    if btnRestartScript then btnRestartScript.Text = t.Restart end
+    if dText then dText.Text = t.DiscordText end
+    
+    -- Pencereler
+    if infoBody then infoBody.Text = t.InfoTitle end
+    if btnCloseInfo then btnCloseInfo.Text = t.CloseInfo end
+    if btnConfirmYes then btnConfirmYes.Text = t.Yes end
+    if btnConfirmNope then btnConfirmNope.Text = t.Nope end
+
+    -- Switch Etiketleri
+    local function setSwitchLbl(btnObj, text)
+        if btnObj and btnObj.Parent then
+            local lbl = btnObj.Parent:FindFirstChildOfClass("TextLabel")
+            if lbl then lbl.Text = text end
+        end
+    end
+    
+    setSwitchLbl(btnRemember, t.Remember)
+    setSwitchLbl(btnMaxFps, t.MaxFps)
+    setSwitchLbl(btnAutoExec, t.AutoExec)
+    setSwitchLbl(btnNavPref, t.ExtNav)
+    setSwitchLbl(btnFpsMon, t.FpsMon)
+    setSwitchLbl(btnAfk, t.Afk)
+    setSwitchLbl(btnDynRes, t.DynRes)
+    setSwitchLbl(btnDistCull, t.DistCull)
+    setSwitchLbl(btnAnimLimit, t.AnimLim)
+    setSwitchLbl(btnDeepRam, t.DeepRam)
+
+    -- Butonlar (Aktif/Pasif Durumlarına Göre Çeviri)
+    if btnRejoin then btnRejoin.Text = t.Rejoin end
+    
+    local function updateModuleText(name, offText, onText)
+        local m = activeModules[name]
+        if m and m.Btn then
+            m.Btn.Text = m.IsActive and onText or offText
+        end
+    end
+
+    updateModuleText("BtnGfx", t.GfxLvl, t.GfxLvl)
+    updateModuleText("BtnLowGfx", t.LowGfx_OFF, t.LowGfx_ON)
+    updateModuleText("BtnShadows", t.Shadows_ON, t.Shadows_OFF)
+    updateModuleText("BtnCastS", t.CastS_ON, t.CastS_OFF)
+    updateModuleText("BtnTex", t.Tex_HIGH, t.Tex_LOW)
+    updateModuleText("BtnPart", t.Part_ON, t.Part_OFF)
+    updateModuleText("BtnHigh", t.High_ON, t.High_OFF)
+    updateModuleText("BtnWater", t.Water_HIGH, t.Water_LOW)
+    updateModuleText("BtnGlow", t.Glow_ON, t.Glow_OFF)
+    updateModuleText("BtnAudio", t.Audio_ON, t.Audio_OFF)
+    updateModuleText("BtnGui", t.Gui_OFF, t.Gui_ON)
+    updateModuleText("Btn3d", t.Render3d_OFF, t.Render3d_ON)
+end
+
+local isLangOpen = false
+table.insert(connections, langBtn.MouseButton1Click:Connect(function()
+    isLangOpen = not isLangOpen
+    langDropFrame.Visible = true
+    applyAppleTween(langDropFrame, {Size = isLangOpen and UDim2.new(0.55, 0, 0, 100) or UDim2.new(0.55, 0, 0, 0)}, 0.25)
+    task.delay(isLangOpen and 0 or 0.25, function() langDropFrame.Visible = isLangOpen end)
+end))
+
+for _, l in ipairs(languages) do
+    local optBtn = Instance.new("TextButton")
+    optBtn.Size = UDim2.new(1, 0, 0, 25); optBtn.BackgroundTransparency = 1
+    optBtn.Font = Enum.Font.SourceSansBold; optBtn.Text = l.Name
+    optBtn.TextColor3 = Color3.fromRGB(200, 200, 210); optBtn.TextSize = 11; optBtn.ZIndex = 101; optBtn.Parent = langDropFrame
+
+    table.insert(connections, optBtn.MouseButton1Click:Connect(function()
+        langBtn.Text = l.Name
+        isLangOpen = false
+        applyAppleTween(langDropFrame, {Size = UDim2.new(0.55, 0, 0, 0)}, 0.25)
+        task.delay(0.25, function() langDropFrame.Visible = false end)
+        updateLanguageUI(l.Code)
+    end))
+end
+
+for _, l in ipairs(languages) do
+    if l.Code == currentLang then langBtn.Text = l.Name end
+end
+updateLanguageUI(currentLang)
+
+
 local btnRemember, knobRemember = createSwitch("Remember Changes", sysScroll)
 local btnMaxFps, knobMaxFps = createSwitch("Remove 500 FPS Limit", sysScroll)
 local btnAutoExec, knobAutoExec = createSwitch("Auto-Execute On Teleport", sysScroll)
