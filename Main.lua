@@ -531,6 +531,199 @@ task.spawn(function()
         task.wait(15)
     end
 end)
+-- [[ HYPER FRIEND (SHOULDER PET) MODULE ]]
+local petModel = nil
+local petConnection = nil
+local friendSpamCount = 0
+local lastToggleTimestamp = 0
+local isPunishmentActive = false
+_G.HyperFriendEnabled = false
+
+local function GetThemeColor()
+    return globalAccentColor or Color3.fromRGB(0, 162, 255)
+end
+
+task.spawn(function()
+    while task.wait(0.5) do
+        local now = os.clock()
+        if friendSpamCount > 0 and not isPunishmentActive then
+            if now - lastToggleTimestamp >= 10.0 then
+                friendSpamCount = 0
+            end
+        end
+    end
+end)
+
+local function CreateGroundVFX(pos, vfxColor)
+    local vfxPart = Instance.new("Part")
+    vfxPart.Name = "HyperVFXPart"
+    vfxPart.Size = Vector3.new(1, 1, 1)
+    vfxPart.CFrame = CFrame.new(pos)
+    vfxPart.Anchored = true; vfxPart.CanCollide = false; vfxPart.Transparency = 1; vfxPart.Parent = workspace
+
+    local att = Instance.new("Attachment", vfxPart)
+    local emitter = Instance.new("ParticleEmitter")
+    emitter.Texture = "rbxassetid://243660364"
+    emitter.Color = ColorSequence.new(vfxColor)
+    emitter.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.6), NumberSequenceKeypoint.new(0.5, 1.2), NumberSequenceKeypoint.new(1, 0)})
+    emitter.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(1, 1)})
+    emitter.Lifetime = NumberRange.new(0.4, 0.7); emitter.Rate = 60; emitter.Speed = NumberRange.new(4, 8); emitter.SpreadAngle = Vector2.new(360, 360)
+    emitter.Parent = att
+
+    local flashLight = Instance.new("PointLight")
+    flashLight.Color = vfxColor; flashLight.Brightness = 10; flashLight.Range = 12; flashLight.Parent = vfxPart
+    TweenService:Create(flashLight, TweenInfo.new(0.5), {Brightness = 0, Range = 0}):Play()
+
+    task.delay(0.3, function() emitter.Enabled = false end)
+    game:GetService("Debris"):AddItem(vfxPart, 1.2)
+end
+
+local function TriggerFullPunishment()
+    if isPunishmentActive then return end
+    isPunishmentActive = true
+
+    pcall(function()
+        Lighting.Ambient = Color3.fromRGB(200, 0, 0)
+        Lighting.OutdoorAmbient = Color3.fromRGB(255, 0, 0)
+        Lighting.FogColor = Color3.fromRGB(15, 0, 0)
+        Lighting.FogEnd = 60; Lighting.FogStart = 0
+        local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky", Lighting)
+        sky.SkyboxBk = "rbxassetid://2634494"; sky.SkyboxDn = "rbxassetid://2634494"
+        sky.SkyboxFt = "rbxassetid://2634494"; sky.SkyboxLf = "rbxassetid://2634494"
+        sky.SkyboxRt = "rbxassetid://2634494"; sky.SkyboxUp = "rbxassetid://2634494"
+    end)
+
+    local staticSound = Instance.new("Sound")
+    staticSound.SoundId = "rbxassetid://9114223178"; staticSound.Volume = 4; staticSound.Looped = true; staticSound.Parent = game:GetService("SoundService"); staticSound:Play()
+
+    local pGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+    local punishGui = Instance.new("ScreenGui"); punishGui.Name = "HyperPunishGui"; punishGui.ResetOnSpawn = false; punishGui.Parent = pGui
+    local redOverlay = Instance.new("Frame"); redOverlay.Size = UDim2.new(1, 0, 1, 0); redOverlay.BackgroundColor3 = Color3.fromRGB(150, 0, 0); redOverlay.BackgroundTransparency = 0.55; redOverlay.Parent = punishGui
+
+    local words = {"STOP IT", "WHY", "PUNISHMENT", "NO MORE", "ENOUGH"}
+    local running = true
+
+    task.spawn(function()
+        while running do
+            local oof = Instance.new("Sound"); oof.SoundId = "rbxassetid://5143383166"; oof.Volume = 10; oof.Parent = game:GetService("SoundService"); oof:Play()
+            game:GetService("Debris"):AddItem(oof, 1.5)
+            task.wait(0.09)
+        end
+    end)
+
+    task.spawn(function()
+        while running do
+            local txtLbl = Instance.new("TextLabel"); txtLbl.Size = UDim2.new(0, 250, 0, 60); txtLbl.Position = UDim2.new(math.random(5, 75)/100, 0, math.random(5, 75)/100, 0); txtLbl.BackgroundTransparency = 1; txtLbl.Font = Enum.Font.GothamBlack; txtLbl.Text = words[math.random(1, #words)]; txtLbl.TextColor3 = Color3.fromRGB(255, 0, 0); txtLbl.TextSize = math.random(32, 55); txtLbl.Parent = punishGui
+            local stroke = Instance.new("UIStroke", txtLbl); stroke.Color = Color3.fromRGB(0, 0, 0); stroke.Thickness = 3
+            task.spawn(function()
+                for i = 1, 10 do txtLbl.Position = txtLbl.Position + UDim2.new(0, math.random(-10, 10), 0, math.random(-10, 10)); task.wait(0.03) end
+                txtLbl:Destroy()
+            end)
+            task.wait(0.08)
+        end
+    end)
+
+    task.wait(30)
+    running = false
+    Players.LocalPlayer:Kick("YOU ARE PUNISHED")
+end
+
+local function ToggleHyperFriend(state)
+    if isPunishmentActive then return end
+    local now = os.clock()
+    if now - lastToggleTimestamp <= 2.0 then friendSpamCount = friendSpamCount + 1 end
+    lastToggleTimestamp = now
+
+    if friendSpamCount >= 8 then TriggerFullPunishment() return end
+
+    _G.HyperFriendEnabled = state
+    local activeThemeColor = GetThemeColor()
+
+    if not _G.HyperFriendEnabled then
+        if petConnection then petConnection:Disconnect(); petConnection = nil end
+        if petModel and petModel.PrimaryPart then
+            local head = petModel.PrimaryPart
+            CreateGroundVFX(head.Position + Vector3.new(0, -2.5, 0), friendSpamCount >= 4 and Color3.fromRGB(255, 0, 0) or activeThemeColor)
+            local startCF = head.CFrame
+            local downVal = Instance.new("CFrameValue"); downVal.Value = startCF
+            local c = downVal.Changed:Connect(function(v) if petModel and petModel.PrimaryPart then petModel:SetPrimaryPartCFrame(v) end end)
+            local tw = TweenService:Create(downVal, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Value = startCF * CFrame.new(0, -3.5, 0)})
+            tw:Play(); tw.Completed:Wait(); c:Disconnect(); downVal:Destroy()
+            petModel:Destroy(); petModel = nil
+        end
+        return
+    end
+
+    local char = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+    local hrp = char:WaitForChild("HumanoidRootPart")
+
+    petModel = Instance.new("Model"); petModel.Name = "HyperFriendPet"
+    local head = Instance.new("Part"); head.Name = "Head"; head.Shape = Enum.PartType.Ball; head.Size = Vector3.new(1.2, 1.2, 1.2); head.Color = Color3.fromRGB(30, 30, 38); head.Material = Enum.Material.Sand; head.CanCollide = false; head.Anchored = true; head.Parent = petModel
+    petModel.PrimaryPart = head
+
+    local function createHorn(size, color, mat)
+        local p = Instance.new("WedgePart"); p.Size = size; p.Color = color; p.Material = mat; p.CanCollide = false; p.Anchored = true; p.Parent = petModel; return p
+    end
+
+    local hornBaseColor = activeThemeColor
+    local hornTipColor  = Color3.fromRGB(math.min(activeThemeColor.R*255 + 40, 255), math.min(activeThemeColor.G*255 + 40, 255), math.min(activeThemeColor.B*255 + 40, 255))
+    local eyeColor      = Color3.fromRGB(255, 255, 255)
+
+    if friendSpamCount >= 4 then
+        hornBaseColor = Color3.fromRGB(255, 0, 0)
+        hornTipColor  = Color3.fromRGB(255, 60, 60)
+        eyeColor      = Color3.fromRGB(255, 0, 0)
+    end
+
+    local hBaseL = createHorn(Vector3.new(0.15, 0.45, 0.3), hornBaseColor, Enum.Material.Glass)
+    local hTipL  = createHorn(Vector3.new(0.1, 0.35, 0.2), hornTipColor, Enum.Material.Neon)
+    local hBaseR = createHorn(Vector3.new(0.15, 0.45, 0.3), hornBaseColor, Enum.Material.Glass)
+    local hTipR  = createHorn(Vector3.new(0.1, 0.35, 0.2), hornTipColor, Enum.Material.Neon)
+
+    local eyeGUI = Instance.new("SurfaceGui"); eyeGUI.Face = Enum.NormalId.Front; eyeGUI.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud; eyeGUI.PixelsPerStud = 50; eyeGUI.Parent = head
+    local eyeFrame = Instance.new("Frame"); eyeFrame.Size = UDim2.new(1, 0, 1, 0); eyeFrame.BackgroundTransparency = 1; eyeFrame.Parent = eyeGUI
+
+    local function createEye(isLeft)
+        local eye = Instance.new("Frame"); eye.Size = UDim2.new(0, 17, 0, 10); eye.Position = isLeft and UDim2.new(0.18, 0, 0.35, 0) or UDim2.new(0.62, 0, 0.35, 0); eye.BackgroundColor3 = eyeColor; eye.BorderSizePixel = 0; eye.Parent = eyeFrame
+        Instance.new("UICorner", eye).CornerRadius = UDim.new(0.8, 0)
+    end
+    createEye(true); createEye(false)
+
+    local function updatePetCFrame(cf)
+        head.CFrame = cf
+        hBaseL.CFrame = cf * CFrame.new(-0.38, 0.48, 0.12) * CFrame.Angles(math.rad(-40), math.rad(-5), math.rad(-12))
+        hTipL.CFrame  = hBaseL.CFrame * CFrame.new(0, 0.3, 0.1) * CFrame.Angles(math.rad(-25), 0, 0)
+        hBaseR.CFrame = cf * CFrame.new(0.38, 0.48, 0.12) * CFrame.Angles(math.rad(-40), math.rad(5), math.rad(12))
+        hTipR.CFrame  = hBaseR.CFrame * CFrame.new(0, 0.3, 0.1) * CFrame.Angles(math.rad(-25), 0, 0)
+    end
+
+    petModel.Parent = workspace
+    CreateGroundVFX((hrp.CFrame * CFrame.new(2, 1.8, 0.5)).Position, hornBaseColor)
+
+    local spawnValue = Instance.new("NumberValue"); spawnValue.Value = -3.5
+    TweenService:Create(spawnValue, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Value = 0}):Play()
+
+    local floatTimer = 0
+    petConnection = RunService.RenderStepped:Connect(function(dt)
+        if not char or not hrp or not hrp.Parent then return end
+        floatTimer = floatTimer + dt
+        local floatOffsetY = math.sin(floatTimer * 3) * 0.15 + spawnValue.Value
+        local shakeX, shakeY, shakeZ = 0, 0, 0
+        if friendSpamCount >= 2 and friendSpamCount < 4 then
+            shakeX = math.random(-8, 8) / 100; shakeY = math.random(-8, 8) / 100
+        elseif friendSpamCount >= 4 then
+            shakeX = math.random(-22, 22) / 100; shakeY = math.random(-22, 22) / 100; shakeZ = math.random(-22, 22) / 100
+        end
+
+        local shoulderTarget = hrp.CFrame * CFrame.new(2 + shakeX, 1.8 + floatOffsetY + shakeY, 0.5 + shakeZ)
+        local lookDirection = workspace.CurrentCamera.CFrame.LookVector
+        local finalCF = CFrame.new(shoulderTarget.Position, shoulderTarget.Position + lookDirection)
+        
+        if head.CFrame == CFrame.new(0,0,0) then updatePetCFrame(finalCF) else updatePetCFrame(head.CFrame:Lerp(finalCF, 0.2)) end
+    end)
+end
+-- Yoldaş kodlarının bittiği yerin hemen altı:
+local btnHyperFriend, knobHyperFriend = createSwitch("Call Hyper Friend", featScroll)
 
 local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
@@ -620,6 +813,7 @@ bindSwitch(btnRemember, knobRemember, "Remember", function(s) env.HYPER_SAVE.Rem
 bindSwitch(btnMaxFps, knobMaxFps, "MaxFps", function(s) unlockFps = s; MAX_FPS = s and 10000 or 500 end)
 bindSwitch(btnAutoExec, knobAutoExec, "AutoExec", function(s) autoExec = s; local qot = (syn and syn.queue_on_teleport) or queue_on_teleport; if qot then qot([[loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))()]]) end end)
 bindSwitch(btnAfk, knobAfk, "Afk", function(s) isAfkEngine = s; if s then pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPERWORK", Text="AFK Optimization Activated!", Duration=3}) end) end end)
+bindSwitch(btnHyperFriend, knobHyperFriend, "HyperFriend", function(s) ToggleHyperFriend(s) end)
 bindSwitch(btnDynRes, knobDynRes, "DynRes", function(s) isDynRes = s end)
 bindSwitch(btnDeepRam, knobDeepRam, "DeepRam", function(s) if s then task.wait(0.2); pcall(function() collectgarbage("collect") end); handleSwitch(btnDeepRam, knobDeepRam, false); switchRegistry["DeepRam"].State = false; env.HYPER_SAVE.Switches["DeepRam"] = false end end)
 
