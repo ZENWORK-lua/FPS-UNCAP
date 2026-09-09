@@ -496,17 +496,20 @@ cardPadding.PaddingTop = UDim.new(0, 5)
 
 local function createInfoLine(text, order)
     local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -16, 0, 14)
+    lbl.Size = UDim2.new(1, -12, 0, 0)
+    lbl.AutomaticSize = Enum.AutomaticSize.Y
     lbl.BackgroundTransparency = 1
     lbl.Font = Enum.Font.SourceSansBold
     lbl.Text = text
     lbl.TextColor3 = Color3.fromRGB(180, 180, 195)
-    lbl.TextSize = 11
+    lbl.TextSize = 10
+    lbl.TextWrapped = true
     lbl.TextXAlignment = Enum.TextXAlignment.Left
     lbl.LayoutOrder = order
     lbl.Parent = infoCard
     return lbl
 end
+
 
 local tCurr = langData[currentLang] or langData.EN
 local lblVer = createInfoLine(tCurr.VersionTxt, 1)
