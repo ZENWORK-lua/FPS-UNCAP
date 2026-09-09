@@ -37,7 +37,7 @@ if not env.HYPER_SAVE.Switches then env.HYPER_SAVE.Switches = {} end
 env.saveHubData = function() if env.HYPER_SAVE.Remember and writefile then pcall(function() writefile("HYPER_HUB.json", HttpService:JSONEncode(env.HYPER_SAVE)) end) end end
 
 local origSettings = { GlobalShadows = Lighting.GlobalShadows, QualityLevel = settings().Rendering.QualityLevel, WaterWaveSize = workspace.Terrain.WaterWaveSize, WaterWaveSpeed = workspace.Terrain.WaterWaveSpeed, WaterReflectance = workspace.Terrain.WaterReflectance }
-local MIN_FPS, MAX_FPS = 5, 500; local currentTargetFps = setfpscap and 120
+local MIN_FPS, MAX_FPS = 5, 500; local currentTargetFps = setfpscap and 60
 local function applyAppleTween(obj, props, dur) TweenService:Create(obj, TweenInfo.new(dur or 0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), props):Play() end
 -- [[ UI: MAIN ]]
 local screenGui = Instance.new("ScreenGui")
