@@ -2,6 +2,11 @@
 _G.HyperMainStart = false
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Assistant.lua"))()
 repeat task.wait() until _G.HyperMainStart == true
+_G.HyperMainStart = nil
+if game:GetService("CoreGui"):FindFirstChild("HyperOpeningUI") then
+    game:GetService("CoreGui").HyperOpeningUI:Destroy()
+end
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -10,7 +15,6 @@ local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 
--- 
 local env = (getgenv and getgenv()) or _G
 local function getSafeGuiParent()
     local p = nil; if gethui then pcall(function() p = gethui() end) end
@@ -39,6 +43,7 @@ env.saveHubData = function() if env.HYPER_SAVE.Remember and writefile then pcall
 local origSettings = { GlobalShadows = Lighting.GlobalShadows, QualityLevel = settings().Rendering.QualityLevel, WaterWaveSize = workspace.Terrain.WaterWaveSize, WaterWaveSpeed = workspace.Terrain.WaterWaveSpeed, WaterReflectance = workspace.Terrain.WaterReflectance }
 local MIN_FPS, MAX_FPS = 5, 500; local currentTargetFps = setfpscap and 60
 local function applyAppleTween(obj, props, dur) TweenService:Create(obj, TweenInfo.new(dur or 0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), props):Play() end
+
 -- [[ UI: MAIN ]]
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FPSCapUI"; screenGui.ResetOnSpawn = false; screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -52,7 +57,6 @@ afkText.Text = "AFK optimization activated.\nClick anywhere to stop"; afkText.Te
 local fpsMonFrame = Instance.new("Frame"); fpsMonFrame.Size = UDim2.new(0, 100, 0, 26); fpsMonFrame.Position = UDim2.new(0.5, 0, 0, 10); fpsMonFrame.AnchorPoint = Vector2.new(0.5, 0); fpsMonFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25); fpsMonFrame.BackgroundTransparency = 0.4; fpsMonFrame.Visible = false; fpsMonFrame.Parent = screenGui
 Instance.new("UICorner", fpsMonFrame).CornerRadius = UDim.new(0, 8); Instance.new("UIStroke", fpsMonFrame).Color = Color3.fromRGB(0, 162, 255)
 local fpsMonText = Instance.new("TextLabel"); fpsMonText.Size = UDim2.new(1, 0, 1, 0); fpsMonText.BackgroundTransparency = 1; fpsMonText.Font = Enum.Font.GothamBold; fpsMonText.Text = "FPS: 60"; fpsMonText.TextColor3 = Color3.fromRGB(255, 255, 255); fpsMonText.TextSize = 13; fpsMonText.Parent = fpsMonFrame
-
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"; mainFrame.Size = UDim2.new(0, 0, 0, 0); mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainFrame.AnchorPoint = Vector2.new(0.5, 0.5); mainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -70,6 +74,7 @@ local auraStroke = Instance.new("UIStroke"); auraStroke.Color = Color3.fromRGB(0
 local introText = Instance.new("TextLabel")
 introText.Size = UDim2.new(1, 0, 1, 0); introText.BackgroundTransparency = 1; introText.Font = Enum.Font.GothamBold
 introText.Text = "HYPER|FPS"; introText.TextColor3 = Color3.fromRGB(255, 255, 255); introText.TextSize = 17; introText.TextTransparency = 1; introText.ZIndex = 100; introText.Parent = mainFrame
+
 -- [[ EXTERNAL NAVIGATION ]]
 local extBtnClose = Instance.new("TextButton"); extBtnClose.Size = UDim2.new(0, 36, 0, 36); extBtnClose.AnchorPoint = Vector2.new(0.5, 0.5); extBtnClose.Position = UDim2.new(1, 30, 0, 24); extBtnClose.BackgroundColor3 = Color3.fromRGB(45, 45, 52)
 extBtnClose.Text = "×"; extBtnClose.Font = Enum.Font.GothamBold; extBtnClose.TextSize = 22; extBtnClose.TextColor3 = Color3.fromRGB(220, 220, 220); extBtnClose.Visible = false; extBtnClose.Parent = mainFrame
@@ -104,7 +109,6 @@ local themePage = Instance.new("Frame"); themePage.Size = UDim2.new(1, 0, 1, 0);
 local settingsPage = Instance.new("Frame"); settingsPage.Size = UDim2.new(1, 0, 1, 0); settingsPage.BackgroundTransparency = 1; settingsPage.Visible = false; settingsPage.Parent = contentContainer
 local confirmPage = Instance.new("Frame"); confirmPage.Size = UDim2.new(1, 0, 1, 0); confirmPage.BackgroundTransparency = 1; confirmPage.Visible = false; confirmPage.Parent = contentContainer
 local fadeCurtain = Instance.new("Frame"); fadeCurtain.Size = UDim2.new(1, 0, 1, 0); fadeCurtain.BackgroundColor3 = Color3.fromRGB(10, 10, 15); fadeCurtain.BackgroundTransparency = 1; fadeCurtain.ZIndex = 10; fadeCurtain.Parent = contentContainer; Instance.new("UICorner", fadeCurtain).CornerRadius = UDim.new(0, 16)
-
 local btnTheme = Instance.new("ImageButton"); btnTheme.Size = UDim2.new(0, 20, 0, 20); btnTheme.Position = UDim2.new(1, -60, 0, 18); btnTheme.BackgroundTransparency = 1; btnTheme.Image = "rbxassetid://3926307971"; btnTheme.ImageRectOffset = Vector2.new(764, 244); btnTheme.ImageRectSize = Vector2.new(36, 36); btnTheme.ImageColor3 = Color3.fromRGB(255, 255, 255); btnTheme.ImageTransparency = 0.3; btnTheme.ZIndex = 11; btnTheme.AnchorPoint = Vector2.new(0.5, 0.5); btnTheme.Position = UDim2.new(1, -50, 0, 28); btnTheme.Parent = contentContainer
 local btnSettings = Instance.new("ImageButton"); btnSettings.Size = UDim2.new(0, 20, 0, 20); btnSettings.BackgroundTransparency = 1; btnSettings.Image = "rbxassetid://3926307971"; btnSettings.ImageRectOffset = Vector2.new(324, 124); btnSettings.ImageRectSize = Vector2.new(36, 36); btnSettings.ImageColor3 = Color3.fromRGB(255, 255, 255); btnSettings.ImageTransparency = 0.3; btnSettings.ZIndex = 11; btnSettings.AnchorPoint = Vector2.new(0.5, 0.5); btnSettings.Position = UDim2.new(1, -24, 0, 28); btnSettings.Parent = contentContainer
 
@@ -122,7 +126,6 @@ local hMask = Instance.new("CanvasGroup"); hMask.Size = UDim2.new(1, -24, 0, 65)
 local hGrad = Instance.new("UIGradient"); hGrad.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.08, 0), NumberSequenceKeypoint.new(0.92, 0), NumberSequenceKeypoint.new(1, 1)}); hGrad.Parent = hMask
 local scrollFrame = Instance.new("ScrollingFrame"); scrollFrame.Size = UDim2.new(1, 0, 1, 0); scrollFrame.BackgroundTransparency = 1; scrollFrame.BorderSizePixel = 0; scrollFrame.ScrollBarThickness = 0; scrollFrame.ScrollingDirection = Enum.ScrollingDirection.X; scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.X; scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0); scrollFrame.Parent = hMask 
 local gridLayout = Instance.new("UIGridLayout"); gridLayout.CellSize = UDim2.new(0, 115, 0, 28); gridLayout.CellPadding = UDim2.new(0, 8, 0, 8); gridLayout.FillDirection = Enum.FillDirection.Vertical; gridLayout.Parent = scrollFrame
-
 local segmentBg = Instance.new("Frame"); segmentBg.Size = UDim2.new(0, 160, 0, 26); segmentBg.Position = UDim2.new(0, 12, 0, 14); segmentBg.BackgroundColor3 = Color3.fromRGB(25, 25, 30); segmentBg.Parent = settingsPage; Instance.new("UICorner", segmentBg).CornerRadius = UDim.new(1, 0)
 local segmentSlider = Instance.new("Frame"); segmentSlider.Size = UDim2.new(0, 95, 1, -4); segmentSlider.Position = UDim2.new(0, 2, 0, 2); segmentSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 70); segmentSlider.Parent = segmentBg; Instance.new("UICorner", segmentSlider).CornerRadius = UDim.new(1, 0)
 local btnSysTab = Instance.new("TextButton"); btnSysTab.Size = UDim2.new(0, 95, 1, 0); btnSysTab.Position = UDim2.new(0, 0, 0, 0); btnSysTab.BackgroundTransparency = 1; btnSysTab.Font = Enum.Font.SourceSansBold; btnSysTab.Text = "SYSTEM"; btnSysTab.TextColor3 = Color3.fromRGB(255, 255, 255); btnSysTab.TextSize = 11; btnSysTab.Parent = segmentBg
@@ -163,10 +166,11 @@ local function createSwitch(text, parent)
     Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
     return btn, knob, f
 end
+
 -- [[ HYPER|HUB - EXPANDABLE MULTI-LANG MODULE ]]
 local currentLang = env.HYPER_SAVE.Language or "EN"
 
- local langData = {
+local langData = {
     EN = {
         SysTab = "SYSTEM", MoreTab = "MORE", ThemeTitle = "MY THEMES",
         Restart = "RESTART SCRIPT", DiscordText = "Report bugs on Discord: lowkeyzenith",
@@ -177,7 +181,7 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         AutoExec = "Auto-Execute On Teleport", ExtNav = "External Navigation",
         FpsMon = "Live FPS Monitor", Afk = "AFK Optimization",
         DynRes = "Dynamic Res Scaler (BETA)", DistCull = "Distance Quality Culling",
-        AnimLim = "Distance Anim Limiter", DeepRam = "Deep RAM Flush",
+        AnimLim = "Distance Anim Limiter",
         
         Rejoin = "REJOIN SERVER", GfxLvl = "GFX LVL: AUTO",
         LowGfx_OFF = "LOW GFX: OFF", LowGfx_ON = "LOW GFX: ON",
@@ -196,9 +200,8 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         CloseInfo = "Close this information", ConfirmClose = "Do you want to close the script?",
         ConfirmPersist = "Do you want the changes to persist?", Yes = "Yes", Nope = "Nope",
 
-        VersionTxt = "Version: 1.5 (testing)", ServerIdTxt = "Server ID: %s",
-        PerfTxt = "Performance Stats: %s (%d FPS)", PerfCalc = "Performance Stats: Calculating...",
-        Log1 = "Update Log: added 3 language support,", Log2 = "added information panel, stability & bug fix."
+        VersionTxt = "Version: 2.0(New)", ServerIdTxt = "Server ID: %s",
+        Log1 = "*Now the entire menu supports the 4 languages,Added Engine profile,", Log2 = "removed ram flush into background,Animations & physics updated,added discord menu,Fixed stability & bugs"
     },
     TR = {
         SysTab = "SİSTEM", MoreTab = "DİĞER", ThemeTitle = "TEMALARIM",
@@ -210,8 +213,8 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         AutoExec = "Işınlanmada Oto-Çalıştır", ExtNav = "Harici Gezinme",
         FpsMon = "Canlı FPS Monitörü", Afk = "AFK Optimizasyonu",
         DynRes = "Dinamik Çözünürlük (BETA)", DistCull = "Mesafe Kalite Filtresi",
-        AnimLim = "Mesafe Animasyon Sınırı", DeepRam = "Derin RAM Temizliği",
-        
+        AnimLim = "Mesafe Animasyon Sınırı",
+
         Rejoin = "SUNUCUYA YENİDEN KATIL", GfxLvl = "GFX SEVİYE: OTO",
         LowGfx_OFF = "DÜŞÜK GFX: KAPALI", LowGfx_ON = "DÜŞÜK GFX: AÇIK",
         Shadows_ON = "GÖLGELER: AÇIK", Shadows_OFF = "GÖLGELER: KAPALI",
@@ -229,9 +232,8 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         CloseInfo = "Bilgilendirmeyi Kapat", ConfirmClose = "Scripti kapatmak istiyor musunuz?",
         ConfirmPersist = "Değişiklikler kalıcı olsun mu?", Yes = "Evet", Nope = "Hayır",
 
-        VersionTxt = "Sürüm: 1.5 (test)", ServerIdTxt = "Sunucu ID: %s",
-        PerfTxt = "Performans Durumu: %s (%d FPS)", PerfCalc = "Performans Durumu: Hesaplanıyor...",
-        Log1 = "Güncelleme Notu: 3 dil desteği eklendi,", Log2 = "bilgi paneli eklendi, kararlılık & hata düzeltmesi."
+        VersionTxt = "Sürüm: 2.0(New)", ServerIdTxt = "Sunucu ID: %s",
+        Log1 = "*Now the entire menu supports the 4 languages,Added Engine profile,", Log2 = "removed ram flush into background,Animations & physics updated,added discord menu,Fixed stability & bugs"
     },
     ES = {
         SysTab = "SISTEMA", MoreTab = "MÁS", ThemeTitle = "MIS TEMAS",
@@ -243,7 +245,7 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         AutoExec = "Auto-Ejecutar al Teletransportar", ExtNav = "Navegación Externa",
         FpsMon = "Monitor de FPS en Vivo", Afk = "Optimización AFK",
         DynRes = "Escalador Dinámico (BETA)", DistCull = "Filtro por Distancia",
-        AnimLim = "Limitador de Animación", DeepRam = "Limpieza Profunda de RAM",
+        AnimLim = "Limitador de Animación",
         
         Rejoin = "REUNIRSE AL SERVIDOR", GfxLvl = "NIVEL GFX: AUTO",
         LowGfx_OFF = "GFX BAJO: OFF", LowGfx_ON = "GFX BAJO: ON",
@@ -262,9 +264,8 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         CloseInfo = "Cerrar esta información", ConfirmClose = "¿Quieres cerrar el script?",
         ConfirmPersist = "¿Quieres que los cambios persistan?", Yes = "Sí", Nope = "No",
 
-        VersionTxt = "Versión: 1.5 (pruebas)", ServerIdTxt = "ID de Servidor: %s",
-        PerfTxt = "Rendimiento: %s (%d FPS)", PerfCalc = "Rendimiento: Calculando...",
-        Log1 = "Notas: añadido soporte para 3 idiomas,", Log2 = "panel de información, corrección de errores."
+        VersionTxt = "Versión: 2.0(New)", ServerIdTxt = "ID de Servidor: %s",
+        Log1 = "*Now the entire menu supports the 4 languages,Added Engine profile,", Log2 = "removed ram flush into background,Animations & physics updated,added discord menu,Fixed stability & bugs"
     },
     RU = {
         SysTab = "СИСТЕМА", MoreTab = "ЕЩЕ", ThemeTitle = "МОИ ТЕМЫ",
@@ -276,7 +277,7 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         AutoExec = "Авто-Запуск при Телепорте", ExtNav = "Внешняя Навигация",
         FpsMon = "Монитор FPS", Afk = "Оптимизация AFK",
         DynRes = "Динамическое Разрешение", DistCull = "Фильтр Дальности",
-        AnimLim = "Ограничитель Анимаций", DeepRam = "Глубокая Очистка ОЗУ",
+        AnimLim = "Ограничитель Анимаций",
         
         Rejoin = "ПЕРЕПОДКЛЮЧИТЬСЯ", GfxLvl = "ГРАФИКА: АВТО",
         LowGfx_OFF = "НИЗК. ГРАФИКА: ВЫКЛ", LowGfx_ON = "НИЗК. ГРАФИКА: ВКЛ",
@@ -295,12 +296,10 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
         CloseInfo = "Закрыть информацию", ConfirmClose = "Вы хотите закрыть скрипт?",
         ConfirmPersist = "Сохранить изменения?", Yes = "Да", Nope = "Нет",
 
-        VersionTxt = "Версия: 1.5 (тест)", ServerIdTxt = "ID Сервера: %s",
-        PerfTxt = "Производительность: %s (%d FPS)", PerfCalc = "Производительность: Расчет...",
-        Log1 = "Обновления: добавлена поддержка 3 языков,", Log2 = "инфо-панель, исправления ошибок."
+        VersionTxt = "Версия: 2.0(New)", ServerIdTxt = "ID Сервера: %s",
+        Log1 = "*Now the entire menu supports the 4 languages,Added Engine profile,", Log2 = "removed ram flush into background,Animations & physics updated,added discord menu,Fixed stability & bugs"
     }
 }
-
 -- KUTU AKORDİYON YAPISI (HİÇBİR ŞEYİ KESMEZ)
 local langFrame = Instance.new("Frame")
 langFrame.Size = UDim2.new(1, -8, 0, 30)
@@ -363,35 +362,43 @@ local function updateLanguageUI(code)
     if themeTitle then themeTitle.Text = t.ThemeTitle end
     if stabTitle then stabTitle.Text = t.FeaturesTitle end
     if btnRestartScript then btnRestartScript.Text = t.Restart end
-    if dText then dText.Text = t.DiscordText end
-        if lblVer then lblVer.Text = t.VersionTxt end
+    if dLbl then dLbl.Text = t.DiscordText end
+    if lblVer then lblVer.Text = t.VersionTxt end
     if lblServer then lblServer.Text = string.format(t.ServerIdTxt, tostring(game.JobId ~= "" and game.JobId or "12345")) end
     if lblLog1 then lblLog1.Text = t.Log1 end
     if lblLog2 then lblLog2.Text = t.Log2 end
-    if dLbl then dLbl.Text = t.DiscordText end
 
     if infoBody then infoBody.Text = t.InfoTitle end
     if btnCloseInfo then btnCloseInfo.Text = t.CloseInfo end
     if btnConfirmYes then btnConfirmYes.Text = t.Yes end
     if btnConfirmNope then btnConfirmNope.Text = t.Nope end
 
-    local function setSwitchLbl(btnObj, text)
-        if btnObj and btnObj.Parent then
-            local lbl = btnObj.Parent:FindFirstChildOfClass("TextLabel")
-            if lbl then lbl.Text = text end
+    local switchMapping = {
+        ["Remember Changes"] = t.Remember, ["Değişiklikleri Hatırla"] = t.Remember, ["Recordar Cambios"] = t.Remember, ["Запомнить Изменения"] = t.Remember,
+        ["Remove 500 FPS Limit"] = t.MaxFps, ["500 FPS Sınırını Kaldır"] = t.MaxFps, ["Sin Límite de 500 FPS"] = t.MaxFps, ["Снять Лимит 500 FPS"] = t.MaxFps,
+        ["Auto-Execute On Teleport"] = t.AutoExec, ["Işınlanmada Oto-Çalıştır"] = t.AutoExec, ["Auto-Ejecutar al Teletransportar"] = t.AutoExec, ["Авто-Запуск при Телепорте"] = t.AutoExec,
+        ["External Navigation"] = t.ExtNav, ["Harici Gezinme"] = t.ExtNav, ["Navegación Externa"] = t.ExtNav, ["Внешняя Навигация"] = t.ExtNav,
+        ["Live FPS Monitor"] = t.FpsMon, ["Canlı FPS Monitörü"] = t.FpsMon, ["Monitor de FPS en Vivo"] = t.FpsMon, ["Монитор FPS"] = t.FpsMon,
+        ["AFK Optimization"] = t.Afk, ["AFK Optimizasyonu"] = t.Afk, ["Optimización AFK"] = t.Afk, ["Оптимизация AFK"] = t.Afk,
+        ["Dynamic Res Scaler (BETA)"] = t.DynRes, ["Dinamik Çözünürlük (BETA)"] = t.DynRes, ["Escalador Dinámico (BETA)"] = t.DynRes, ["Динамическое Разрешение"] = t.DynRes,
+        ["Distance Quality Culling"] = t.DistCull, ["Mesafe Kalite Filtresi"] = t.DistCull, ["Filtro por Distancia"] = t.DistCull, ["Фильтр Дальности"] = t.DistCull,
+        ["Distance Anim Limiter"] = t.AnimLim, ["Mesafe Animasyon Sınırı"] = t.AnimLim, ["Limitador de Animación"] = t.AnimLim, ["Ограничитель Анимаций"] = t.AnimLim
+    }
+
+    local function updateContainerLabels(container)
+        if not container then return end
+        for _, frame in ipairs(container:GetChildren()) do
+            if frame:IsA("Frame") then
+                local lbl = frame:FindFirstChildOfClass("TextLabel")
+                if lbl and switchMapping[lbl.Text] then
+                    lbl.Text = switchMapping[lbl.Text]
+                end
+            end
         end
     end
-    
-    setSwitchLbl(btnRemember, t.Remember)
-    setSwitchLbl(btnMaxFps, t.MaxFps)
-    setSwitchLbl(btnAutoExec, t.AutoExec)
-    setSwitchLbl(btnNavPref, t.ExtNav)
-    setSwitchLbl(btnFpsMon, t.FpsMon)
-    setSwitchLbl(btnAfk, t.Afk)
-    setSwitchLbl(btnDynRes, t.DynRes)
-    setSwitchLbl(btnDistCull, t.DistCull)
-    setSwitchLbl(btnAnimLimit, t.AnimLim)
-    setSwitchLbl(btnDeepRam, t.DeepRam)
+
+    updateContainerLabels(sysScroll)
+    updateContainerLabels(featScroll)
 
     if btnRejoin then btnRejoin.Text = t.Rejoin end
     
@@ -414,12 +421,22 @@ local function updateLanguageUI(code)
     updateModuleText("BtnAudio", t.Audio_ON, t.Audio_OFF)
     updateModuleText("BtnGui", t.Gui_OFF, t.Gui_ON)
     updateModuleText("Btn3d", t.Render3d_OFF, t.Render3d_ON)
+
+    if confirmTitle then
+        if confirmStep == 1 then confirmTitle.Text = t.ConfirmClose
+        elseif confirmStep == 2 then confirmTitle.Text = t.ConfirmPersist end
+    end
+    if afkText then 
+        afkText.Text = (code == "TR") and "AFK optimizasyonu aktif.\nDurdurmak için tıklayın" or (code == "RU") and "AFK-оптимизация включена.\nНажмите, чтобы остановить" or (code == "ES") and "Optimización AFK activada.\nHaga clic en cualquier lugar para detener" or "AFK optimization activated.\nClick anywhere to stop" 
+    end
+    if lightLabel then
+        lightLabel.Text = (code == "TR") and "Aydınlatma Motoru:" or (code == "RU") and "Освещение:" or (code == "ES") and "Motor de Luz:" or "Lighting Engine:"
+    end
 end
 
 local isLangOpen = false
 table.insert(connections, langBtn.MouseButton1Click:Connect(function()
     isLangOpen = not isLangOpen
-    -- Ana kutuyu genişleterek alttaki switch'leri aşağı iter
     applyAppleTween(langFrame, {Size = isLangOpen and UDim2.new(1, -8, 0, 138) or UDim2.new(1, -8, 0, 30)}, 0.25)
 end))
 
@@ -444,7 +461,7 @@ end
 for _, l in ipairs(languages) do
     if l.Code == currentLang then langBtn.Text = l.Name end
 end
-updateLanguageUI(currentLang)
+
 local btnRemember, knobRemember = createSwitch("Remember Changes", sysScroll)
 local btnMaxFps, knobMaxFps = createSwitch("Remove 500 FPS Limit", sysScroll)
 local btnAutoExec, knobAutoExec = createSwitch("Auto-Execute On Teleport", sysScroll)
@@ -455,9 +472,9 @@ local btnRestartScript = Instance.new("TextButton"); btnRestartScript.Size = UDi
 local scaleRestart = Instance.new("UIScale", btnRestartScript); attachScaleHoldAnim(btnRestartScript, scaleRestart)
 table.insert(connections, btnRestartScript.MouseButton1Click:Connect(function() env.SYROX_RUNNING = false; if screenGui then screenGui:Destroy() end; pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPERWORK", Text="Restarting script...", Duration=2}) end); task.delay(0.5, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))() end) end))
 
--- [[ SYSTEM INFO & PERFORMANCE PANEL ]]
+-- [[ SYSTEM INFO PANEL ]]
 local infoCard = Instance.new("Frame")
-infoCard.Size = UDim2.new(1, -8, 0, 115) -- Paneli uzattık
+infoCard.Size = UDim2.new(1, -8, 0, 115)
 infoCard.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
 infoCard.BackgroundTransparency = 0.4
 infoCard.LayoutOrder = 9999
@@ -494,13 +511,10 @@ end
 local tCurr = langData[currentLang] or langData.EN
 local lblVer = createInfoLine(tCurr.VersionTxt, 1)
 local lblServer = createInfoLine(string.format(tCurr.ServerIdTxt, tostring(game.JobId ~= "" and game.JobId or "12345")), 2)
-local perfLbl = createInfoLine(tCurr.PerfCalc, 3)
 
--- Update Log 2 Satıra Bölündü (Taşma Engellendi)
-local lblLog1 = createInfoLine(tCurr.Log1, 4)
-local lblLog2 = createInfoLine(tCurr.Log2, 5)
+local lblLog1 = createInfoLine(tCurr.Log1, 3)
+local lblLog2 = createInfoLine(tCurr.Log2, 4)
 
--- En Alttaki Sabit Kırmızı Discord Uyarısı
 local dLbl = Instance.new("TextLabel")
 dLbl.Name = "DiscordLabel"
 dLbl.Size = UDim2.new(1, -16, 0, 15)
@@ -513,31 +527,10 @@ dLbl.TextSize = 11
 dLbl.TextXAlignment = Enum.TextXAlignment.Left
 dLbl.ZIndex = 10
 dLbl.Parent = infoCard
-
--- 30 Saniyelik Dinamik FPS Yargılama Mantığı
-task.spawn(function()
-    while env.SYROX_RUNNING do
-        local fpsVal = currentRealFps or 10
-        local rating = "LOW"
-        if fpsVal >= 65 then
-            rating = "SUPER"
-        elseif fpsVal >= 50 then
-            rating = "HIGH"
-        elseif fpsVal >= 30 then
-            rating = "MID"
-        end
-        local activeT = langData[currentLang] or langData.EN
-        perfLbl.Text = string.format(activeT.PerfTxt, rating, fpsVal)
-        task.wait(15)
-    end
-end)
-
 local btnAfk, knobAfk = createSwitch("AFK Optimization", featScroll)
 local btnDynRes, knobDynRes = createSwitch("Dynamic Res Scaler (BETA)", featScroll)
 local btnDistCull, knobDistCull = createSwitch("Distance Quality Culling", featScroll)
 local btnAnimLimit, knobAnimLimit = createSwitch("Distance Anim Limiter", featScroll)
-local btnDeepRam, knobDeepRam = createSwitch("Deep RAM Flush", featScroll)
-
 local themeTitle = Instance.new("TextLabel"); themeTitle.Size = UDim2.new(1, -24, 0, 22); themeTitle.Position = UDim2.new(0, 12, 0, 20); themeTitle.BackgroundTransparency = 1; themeTitle.Font = Enum.Font.SourceSansBold; themeTitle.TextColor3 = Color3.fromRGB(255, 255, 255); themeTitle.TextSize = 16; themeTitle.TextXAlignment = Enum.TextXAlignment.Center; themeTitle.Text = "MY THEMES"; themeTitle.Parent = themePage
 local tMask = Instance.new("CanvasGroup"); tMask.Size = UDim2.new(1, -24, 0, 150); tMask.Position = UDim2.new(0, 12, 0, 50); tMask.BackgroundTransparency = 1; tMask.BorderSizePixel = 0; tMask.Parent = themePage
 local tGrad = Instance.new("UIGradient"); tGrad.Rotation = 90; tGrad.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.08, 0), NumberSequenceKeypoint.new(0.92, 0), NumberSequenceKeypoint.new(1, 1)}); tGrad.Parent = tMask
@@ -559,6 +552,7 @@ local btnConfirmYes = Instance.new("TextButton"); btnConfirmYes.Size = UDim2.new
 local btnConfirmNope = Instance.new("TextButton"); btnConfirmNope.Size = UDim2.new(0, 100, 0, 32); btnConfirmNope.Position = UDim2.new(0.5, 10, 0, 115); btnConfirmNope.BackgroundColor3 = Color3.fromRGB(231, 76, 60); btnConfirmNope.Font = Enum.Font.SourceSansBold; btnConfirmNope.Text = "Nope"; btnConfirmNope.TextColor3 = Color3.fromRGB(255, 255, 255); btnConfirmNope.TextSize = 14; btnConfirmNope.Parent = confirmPage; Instance.new("UICorner", btnConfirmNope).CornerRadius = UDim.new(0, 8)
 local scYes = Instance.new("UIScale", btnConfirmYes); attachScaleHoldAnim(btnConfirmYes, scYes)
 local scNope = Instance.new("UIScale", btnConfirmNope); attachScaleHoldAnim(btnConfirmNope, scNope)
+
 -- [[ MENU ANIMATIONS & EFFECTS ]]
 local currentState = 0
 local currentPage = mainPage
@@ -583,7 +577,6 @@ table.insert(connections, btnTheme.MouseButton1Click:Connect(function() applyApp
 table.insert(connections, btnSettings.MouseButton1Click:Connect(function() currentSettingsRot = currentSettingsRot + 360; applyAppleTween(btnSettings, {Rotation = currentSettingsRot}, 0.5); applyAppleTween(btnSettings, {ImageTransparency = 0}, 0.1); openPage(settingsPage); task.delay(0.2, function() applyAppleTween(btnSettings, {ImageTransparency = 0.3}, 0.3) end) end))
 table.insert(connections, btnSysTab.MouseButton1Click:Connect(function() btnSysTab.Text = "SYSTEM"; btnFeatTab.Text = "MRFT"; applyAppleTween(btnSysTab, {Size = UDim2.new(0, 95, 1, 0)}); applyAppleTween(btnFeatTab, {Size = UDim2.new(0, 65, 1, 0), Position = UDim2.new(0, 95, 0, 0)}); applyAppleTween(segmentSlider, {Size = UDim2.new(0, 95, 1, -4), Position = UDim2.new(0, 2, 0, 2)}, 0.3); btnSysTab.TextColor3 = Color3.fromRGB(255,255,255); btnFeatTab.TextColor3 = Color3.fromRGB(150,150,160); featScroll.Visible = false; sysScroll.Visible = true end))
 table.insert(connections, btnFeatTab.MouseButton1Click:Connect(function() btnSysTab.Text = "SYTM"; btnFeatTab.Text = "MORE FEATURES"; applyAppleTween(btnSysTab, {Size = UDim2.new(0, 45, 1, 0)}); applyAppleTween(btnFeatTab, {Size = UDim2.new(0, 115, 1, 0), Position = UDim2.new(0, 45, 0, 0)}); applyAppleTween(segmentSlider, {Size = UDim2.new(0, 115, 1, -4), Position = UDim2.new(0, 45, 0, 2)}, 0.3); btnFeatTab.TextColor3 = Color3.fromRGB(255,255,255); btnSysTab.TextColor3 = Color3.fromRGB(150,150,160); sysScroll.Visible = false; featScroll.Visible = true end))
-
 local function tweenGradient(grad, c1, c2, duration)
     local val = Instance.new("NumberValue"); val.Value = 0
     local tw = TweenService:Create(val, TweenInfo.new(duration, Enum.EasingStyle.Sine), {Value = 1}); tw:Play()
@@ -609,6 +602,61 @@ local function bindSwitch(btn, knob, swName, cb) switchRegistry[swName] = {Btn =
 local function bindToggle(name, tOn, tOff, cb) local m = activeModules[name]; if env.HYPER_SAVE.Toggles[name] then m.IsActive = true; toggleSt(name, true, tOn, tOff); task.spawn(cb, true) end
     table.insert(connections, m.Btn.MouseButton1Click:Connect(function() m.IsActive = not m.IsActive; toggleSt(name, m.IsActive, tOn, tOff); cb(m.IsActive); env.HYPER_SAVE.Toggles[name] = m.IsActive; env.saveHubData() end)) end
 
+local perfFrame = Instance.new("Frame")
+perfFrame.Size = UDim2.new(1, -8, 0, 30); perfFrame.BackgroundTransparency = 1; perfFrame.LayoutOrder = -1; perfFrame.Parent = featScroll
+local perfLabel = Instance.new("TextLabel")
+perfLabel.Size = UDim2.new(0.5, 0, 1, 0); perfLabel.BackgroundTransparency = 1; perfLabel.Font = Enum.Font.SourceSansBold; perfLabel.Text = "Engine Profile:"
+perfLabel.TextColor3 = Color3.fromRGB(200, 200, 210); perfLabel.TextSize = 12; perfLabel.TextXAlignment = Enum.TextXAlignment.Left; perfLabel.Parent = perfFrame
+local perfBtn = Instance.new("TextButton")
+perfBtn.Size = UDim2.new(0.45, 0, 1, 0); perfBtn.Position = UDim2.new(0.55, 0, 0, 0); perfBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+perfBtn.Font = Enum.Font.SourceSansBold; perfBtn.Text = "Default"; perfBtn.TextColor3 = Color3.fromRGB(255, 255, 255); perfBtn.TextSize = 11; perfBtn.Parent = perfFrame
+Instance.new("UICorner", perfBtn).CornerRadius = UDim.new(0, 6)
+
+local profiles = {
+    {Name = "Default", Apply = function()
+        pcall(function()
+            if sethiddenproperty then sethiddenproperty(game:GetService("Lighting"), "Technology", Enum.Technology.ShadowMap) end
+            workspace.PhysicsSteppingMethod = Enum.PhysicsSteppingMethod.Default
+            settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.DistanceBased
+            Lighting.EnvironmentSpecularScale = 1
+            Lighting.EnvironmentDiffuseScale = 1
+            workspace.Terrain.Decoration = true
+        end)
+    end},
+    {Name = "Balanced", Apply = function()
+        pcall(function()
+            if sethiddenproperty then sethiddenproperty(game:GetService("Lighting"), "Technology", Enum.Technology.Voxel) else game:GetService("Lighting").Technology = Enum.Technology.Voxel end
+            workspace.PhysicsSteppingMethod = Enum.PhysicsSteppingMethod.Adaptive
+            settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level02
+            Lighting.EnvironmentSpecularScale = 0
+            Lighting.EnvironmentDiffuseScale = 0.5
+            workspace.Terrain.Decoration = true
+        end)
+    end},
+    {Name = "Performance", Apply = function()
+        pcall(function()
+            if sethiddenproperty then sethiddenproperty(game:GetService("Lighting"), "Technology", Enum.Technology.Compatibility) else game:GetService("Lighting").Technology = Enum.Technology.Compatibility end
+            workspace.PhysicsSteppingMethod = Enum.PhysicsSteppingMethod.Adaptive
+            settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level00
+            Lighting.EnvironmentSpecularScale = 0
+            Lighting.EnvironmentDiffuseScale = 0
+            local t = workspace.Terrain
+            t.Decoration = false
+            t.WaterWaveSize = 0
+            t.WaterWaveSpeed = 0
+            t.WaterReflectance = 0
+        end)
+    end}
+}
+local currentProfileIdx = 1
+
+table.insert(connections, perfBtn.MouseButton1Click:Connect(function()
+    currentProfileIdx = currentProfileIdx + 1
+    if currentProfileIdx > #profiles then currentProfileIdx = 1 end
+    local prof = profiles[currentProfileIdx]
+    perfBtn.Text = prof.Name
+    prof.Apply()
+end))
 local unlockFps, autoExec, isAfkEngine, isDynRes, isDistCull, isAnimLim, isExtNav = false, false, false, false, false, false, false
 local isLow, isShdw, isCast, isTex, isPart, isHigh, isWater, isGlow, isAud, is3d = false, true, true, false, false, true, true, true, true, true
 local isDraggingMoved, isIntroPlaying = false, true
@@ -621,7 +669,6 @@ bindSwitch(btnMaxFps, knobMaxFps, "MaxFps", function(s) unlockFps = s; MAX_FPS =
 bindSwitch(btnAutoExec, knobAutoExec, "AutoExec", function(s) autoExec = s; local qot = (syn and syn.queue_on_teleport) or queue_on_teleport; if qot then qot([[loadstring(game:HttpGet("https://raw.githubusercontent.com/ZENWORK-lua/FPS-UNCAP/refs/heads/main/Main.lua"))()]]) end end)
 bindSwitch(btnAfk, knobAfk, "Afk", function(s) isAfkEngine = s; if s then pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title="HYPERWORK", Text="AFK Optimization Activated!", Duration=3}) end) end end)
 bindSwitch(btnDynRes, knobDynRes, "DynRes", function(s) isDynRes = s end)
-bindSwitch(btnDeepRam, knobDeepRam, "DeepRam", function(s) if s then task.wait(0.2); pcall(function() collectgarbage("collect") end); handleSwitch(btnDeepRam, knobDeepRam, false); switchRegistry["DeepRam"].State = false; env.HYPER_SAVE.Switches["DeepRam"] = false end end)
 bindSwitch(btnDistCull, knobDistCull, "DistCull", function(s) isDistCull = s; if not s then task.spawn(function() for _, v in ipairs(workspace:GetDescendants()) do if v:IsA("BasePart") then v.LocalTransparencyModifier = 0 end end end) end end)
 bindSwitch(btnAnimLimit, knobAnimLimit, "AnimLim", function(s) isAnimLim = s; if not s then task.spawn(function() for _, v in ipairs(workspace:GetDescendants()) do if v:IsA("Humanoid") then v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer; for _, t in ipairs(v:GetPlayingAnimationTracks()) do if t.Speed == 0 then t:AdjustSpeed(1) end end end end end) end end)
 
@@ -636,12 +683,12 @@ bindToggle("BtnWater", "WATER: HIGH", "WATER: LOW", function(s) isWater = s; pca
 bindToggle("BtnGlow", "POST-FX: ON", "POST-FX: OFF", function(s) isGlow = s; asyncProcessDescendants(function(v) if v:IsA("PostEffect") then v.Enabled = s end end) end)
 bindToggle("BtnAudio", "3D AUDIO: ON", "3D AUDIO: OFF", function(s) isAud = s; pcall(function() game:GetService("SoundService").AmbientReverb = s and Enum.ReverbType.NoReverb or Enum.ReverbType.NoReverb end) end)
 bindToggle("Btn3d", "NO RENDER: ON", "NO RENDER: OFF", function(s) is3d = s; pcall(function() RunService:Set3dRenderingEnabled(not s) end) end)
+updateLanguageUI(currentLang)
 table.insert(connections, btnRejoin.MouseButton1Click:Connect(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer) end))
 local function minimizeMenu() currentState = 1; contentContainer.Visible = false; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset - 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(1, 0)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 4, 1, 4)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(1, 20, 1, 20), Position = UDim2.new(0.5, 0, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0.5, 0, 0.5, 0)}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = false; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 35, 0.5, 0)}) else extBtnClose.Visible = false; extBtnMin.Visible = false end end
 local function maximizeMenu() currentState = 0; local cPos = mainFrame.Position; applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210), Position = UDim2.new(cPos.X.Scale, cPos.X.Offset, cPos.Y.Scale, cPos.Y.Offset + 83)}); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}); applyAppleTween(outerAura, {Size = UDim2.new(1, 6, 1, 6)}); applyAppleTween(headerPillTouch, {Size = UDim2.new(0, 150, 0, 32), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -14 or 0)), AnchorPoint = Vector2.new(0.5, 0)}); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, (currentPage == settingsPage and -6 or 12))}); if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true; applyAppleTween(extBtnClose, {Position = UDim2.new(1, 30, 0, 24)}); applyAppleTween(extBtnMin, {Position = UDim2.new(1, 30, 0, 64)}) end; task.delay(0.1, function() if currentState == 0 then contentContainer.Visible = true end end) end
 
-
--- [[ CLOSE ANIM & BUG FIX  ]]
+-- [[ CLOSE ANIM & BUG FIX ]]
 local function playClosingAnimation(persist)
     env.SYROX_RUNNING = false
     if not persist then 
@@ -713,27 +760,93 @@ local function startCloseSequence() confirmStep = 1; confirmTitle.Text = "Do you
 table.insert(connections, extBtnMin.MouseButton1Click:Connect(minimizeMenu)); table.insert(connections, extBtnClose.MouseButton1Click:Connect(startCloseSequence))
 table.insert(connections, btnConfirmNope.MouseButton1Click:Connect(function() if confirmStep == 1 then openPage(mainPage); confirmStep = 0 elseif confirmStep == 2 then playClosingAnimation(false) end end))
 table.insert(connections, btnConfirmYes.MouseButton1Click:Connect(function() if confirmStep == 1 then confirmStep = 2; TweenService:Create(fadeCurtain, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play(); task.delay(0.2, function() confirmTitle.Text = "Do you want the changes to persist?"; TweenService:Create(fadeCurtain, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play() end) elseif confirmStep == 2 then playClosingAnimation(true) end end))
+-- =======================================================
+-- REAL 360° DYNAMIC VECTORIAL STRETCH & SPRING SYSTEM
+-- =======================================================
+local baseSize = 44
+local originalUDim = UDim2.new(0, baseSize, 0, baseSize)
 
-table.insert(connections, headerPillTouch.InputBegan:Connect(function(input) if isIntroPlaying then return end; if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then draggingPill = true; isDraggingMoved = false; pillDragStart = input.Position; startPos = mainFrame.Position end end))
-table.insert(connections, UserInputService.InputChanged:Connect(function(input)
-    if draggingPill and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - pillDragStart; if math.abs(delta.X) > 10 or math.abs(delta.Y) > 10 then isDraggingMoved = true end 
-        local cam = workspace.CurrentCamera; local viewportSize = cam and cam.ViewportSize or Vector2.new(1920, 1080)
-        local frameSize = mainFrame.AbsoluteSize; local anchor = mainFrame.AnchorPoint
-        local rawX = startPos.X.Offset + delta.X; local rawY = startPos.Y.Offset + delta.Y
-        local minX = (anchor.X * frameSize.X) - (viewportSize.X * 0.5); local maxX = (viewportSize.X * 0.5) - ((1 - anchor.X) * frameSize.X)
-        local minY = (anchor.Y * frameSize.Y) - (viewportSize.Y * 0.5); local maxY = (viewportSize.Y * 0.5) - ((1 - anchor.Y) * frameSize.Y)
-        mainFrame.Position = UDim2.new(startPos.X.Scale, math.clamp(rawX, minX, maxX), startPos.Y.Scale, math.clamp(rawY, minY, maxY))
+local pressTweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local dragTweenInfo  = TweenInfo.new(0.05, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+local releaseTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+
+local isDraggingPillIcon = false
+local lastPillPos = Vector2.zero
+local lastClickTime = 0
+
+table.insert(connections, headerPillTouch.InputBegan:Connect(function(input)
+    if isIntroPlaying then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        draggingPill = true
+        isDraggingMoved = false
+        isDraggingPillIcon = true
+        
+        pillDragStart = input.Position
+        startPos = mainFrame.Position
+        lastPillPos = Vector2.new(input.Position.X, input.Position.Y)
+
+        if currentState == 1 then
+            local targetScaledSize = UDim2.new(0, baseSize * 1.15, 0, baseSize * 1.15)
+            TweenService:Create(mainFrame, pressTweenInfo, {Size = targetScaledSize}):Play()
+        end
     end
 end))
 
-local lastClickTime = 0
+table.insert(connections, UserInputService.InputChanged:Connect(function(input)
+    if draggingPill and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - pillDragStart
+        if math.abs(delta.X) > 10 or math.abs(delta.Y) > 10 then isDraggingMoved = true end 
+        
+        local cam = workspace.CurrentCamera
+        local viewportSize = cam and cam.ViewportSize or Vector2.new(1920, 1080)
+        local frameSize = mainFrame.AbsoluteSize
+        local anchor = mainFrame.AnchorPoint
+        local rawX = startPos.X.Offset + delta.X
+        local rawY = startPos.Y.Offset + delta.Y
+        local minX = (anchor.X * frameSize.X) - (viewportSize.X * 0.5)
+        local maxX = (viewportSize.X * 0.5) - ((1 - anchor.X) * frameSize.X)
+        local minY = (anchor.Y * frameSize.Y) - (viewportSize.Y * 0.5)
+        local maxY = (viewportSize.Y * 0.5) - ((1 - anchor.Y) * frameSize.Y)
+        
+        mainFrame.Position = UDim2.new(startPos.X.Scale, math.clamp(rawX, minX, maxX), startPos.Y.Scale, math.clamp(rawY, minY, maxY))
+
+        if currentState == 1 and isDraggingPillIcon then
+            local currentPos = Vector2.new(input.Position.X, input.Position.Y)
+            local dragDelta = currentPos - lastPillPos
+            lastPillPos = currentPos
+            
+            local speed = dragDelta.Magnitude
+            if speed > 0.8 then
+                local stretchFactor = math.clamp(speed * 0.035, 0, 0.8)
+                local unit = dragDelta.Unit
+                
+                local stretchX = 1 + (unit.X * unit.X * stretchFactor) - (unit.Y * unit.Y * stretchFactor * 0.3)
+                local stretchY = 1 + (unit.Y * unit.Y * stretchFactor) - (unit.X * unit.X * stretchFactor * 0.3)
+                
+                local finalX = math.clamp((baseSize * 1.15) * stretchX, baseSize * 0.6, baseSize * 2.0)
+                local finalY = math.clamp((baseSize * 1.15) * stretchY, baseSize * 0.6, baseSize * 2.0)
+                
+                TweenService:Create(mainFrame, dragTweenInfo, {
+                    Size = UDim2.new(0, finalX, 0, finalY)
+                }):Play()
+            end
+        end
+    end
+end))
+
 table.insert(connections, headerPillTouch.InputEnded:Connect(function(input)
     if draggingPill and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
-        draggingPill = false; 
+        draggingPill = false
+        isDraggingPillIcon = false
+
+        if currentState == 1 then
+            TweenService:Create(mainFrame, releaseTweenInfo, {Size = originalUDim}):Play()
+        end
+
         if not isDraggingMoved then
             if isExtNav and currentState == 0 then return end
-            if currentState == 0 then minimizeMenu()
+            if currentState == 0 then 
+                minimizeMenu()
             elseif currentState == 1 then
                 local now = os.clock()
                 if now - lastClickTime < 0.225 then
@@ -772,27 +885,45 @@ end))
 
 task.spawn(function()
     while env.SYROX_RUNNING do
-        task.wait(1)
+        task.wait(2)
         if not isDistCull and not isAnimLim then continue end
-        local lp = Players.LocalPlayer; local char = lp.Character; local root = char and char:FindFirstChild("HumanoidRootPart")
+        local lp = Players.LocalPlayer
+        local char = lp.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
         if not root then continue end
-        local pos = root.Position; local count = 0
-        for _, v in ipairs(workspace:GetDescendants()) do
-            if isDistCull and v:IsA("BasePart") then
-                local dist = (v.Position - pos).Magnitude
-                if dist > 350 then v.LocalTransparencyModifier = 1
-                elseif dist > 150 then v.LocalTransparencyModifier = 0; v.Material = Enum.Material.SmoothPlastic; v.CastShadow = false
-                else v.LocalTransparencyModifier = 0 end
-            end
-            if isAnimLim and v:IsA("Humanoid") and v.Parent ~= char then
-                local pRoot = v.Parent:FindFirstChild("HumanoidRootPart") or v.Parent:FindFirstChild("Torso")
-                if pRoot then
-                    local dist = (pRoot.Position - pos).Magnitude
-                    if dist > 150 then v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None; for _, track in ipairs(v:GetPlayingAnimationTracks()) do track:AdjustSpeed(0) end
-                    else v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer; for _, track in ipairs(v:GetPlayingAnimationTracks()) do if track.Speed == 0 then track:AdjustSpeed(1) end end end
+        local pos = root.Position
+        
+        if isDistCull then
+            for _, v in ipairs(workspace:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    pcall(function()
+                        local dist = (v.Position - pos).Magnitude
+                        if dist > 350 then v.LocalTransparencyModifier = 1
+                        elseif dist > 150 then v.LocalTransparencyModifier = 0; v.Material = Enum.Material.SmoothPlastic; v.CastShadow = false
+                        else v.LocalTransparencyModifier = 0 end
+                    end)
                 end
             end
-            count = count + 1; if count % 200 == 0 then RunService.RenderStepped:Wait() end
+        end
+        
+        if isAnimLim then
+            for _, v in ipairs(workspace:GetDescendants()) do
+                if v:IsA("Humanoid") and v.Parent ~= char then
+                    pcall(function()
+                        local pRoot = v.Parent:FindFirstChild("HumanoidRootPart") or v.Parent:FindFirstChild("Torso")
+                        if pRoot then
+                            local dist = (pRoot.Position - pos).Magnitude
+                            if dist > 150 then 
+                                v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+                                for _, track in ipairs(v:GetPlayingAnimationTracks()) do track:AdjustSpeed(0) end
+                            else 
+                                v.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
+                                for _, track in ipairs(v:GetPlayingAnimationTracks()) do if track.Speed == 0 then track:AdjustSpeed(1) end end 
+                            end
+                        end
+                    end)
+                end
+            end
         end
     end
 end)
@@ -806,4 +937,191 @@ task.spawn(function()
     TweenService:Create(auraStroke, TweenInfo.new(0.3), {Transparency = 0.65}):Play(); TweenService:Create(headerPill, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play(); introText:Destroy(); task.wait(0.2)
     applyAppleTween(mainFrame, {Size = UDim2.new(0, 270, 0, 210)}, 0.5); applyAppleTween(uiCorner, {CornerRadius = UDim.new(0, 16)}, 0.5); applyAppleTween(headerPill, {Size = UDim2.new(0, 50, 0, 5), Position = UDim2.new(0.5, 0, 0, 12)}, 0.5); task.wait(0.3)
     infoOverlay.Visible = true; if isExtNav then extBtnClose.Visible = true; extBtnMin.Visible = true end
+end)
+
+-- =======================================================
+-- HYPER FPS STYLE DISCORD OVERLAY (ANIMATED & RIGHT-ALIGNED)
+-- =======================================================
+task.spawn(function()
+    local TweenService = game:GetService("TweenService")
+    local UserInputService = game:GetService("UserInputService")
+    local HttpService = game:GetService("HttpService")
+    local CoreGui = game:GetService("CoreGui")
+    local Players = game:GetService("Players")
+
+    local overlayGui = Instance.new("ScreenGui")
+    overlayGui.Name = "SyroxDiscordOverlayGui"
+    overlayGui.ResetOnSpawn = false
+
+    local success = pcall(function() overlayGui.Parent = CoreGui end)
+    if not success then
+        overlayGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+    end
+
+    local targetPos = UDim2.new(1, -230, 0.35, 0)
+    local startPosAnim = UDim2.new(1, -230, 0.42, 0)
+    
+    local targetSize = UDim2.new(0, 210, 0, 110)
+    local startSizeAnim = UDim2.new(0, 150, 0, 78)
+
+    local discordOverlay = Instance.new("Frame")
+    discordOverlay.Name = "SyroxDiscordOverlay"
+    discordOverlay.Size = startSizeAnim
+    discordOverlay.Position = startPosAnim
+    discordOverlay.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    discordOverlay.BackgroundTransparency = 1
+    discordOverlay.BorderSizePixel = 0
+    discordOverlay.ClipsDescendants = false
+    discordOverlay.Parent = overlayGui
+
+    Instance.new("UICorner", discordOverlay).CornerRadius = UDim.new(0, 10)
+
+    local frameStroke = Instance.new("UIStroke")
+    frameStroke.Color = Color3.fromRGB(88, 101, 242)
+    frameStroke.Transparency = 1
+    frameStroke.Thickness = 1.2
+    frameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    frameStroke.Parent = discordOverlay
+
+    local pillBtn = Instance.new("TextButton")
+    pillBtn.Name = "PillHandle"
+    pillBtn.Size = UDim2.new(0, 50, 0, 6)
+    pillBtn.Position = UDim2.new(0.5, -25, 0, 8)
+    pillBtn.BackgroundColor3 = Color3.fromRGB(200, 200, 220)
+    pillBtn.BackgroundTransparency = 1
+    pillBtn.Text = ""
+    pillBtn.AutoButtonColor = false
+    pillBtn.Parent = discordOverlay
+    Instance.new("UICorner", pillBtn).CornerRadius = UDim.new(1, 0)
+
+    local joinBtn = Instance.new("TextButton")
+    joinBtn.Name = "JoinDiscordBtn"
+    joinBtn.Size = UDim2.new(0.85, 0, 0.45, 0)
+    joinBtn.Position = UDim2.new(0.075, 0, 0.4, 0)
+    joinBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+    joinBtn.BackgroundTransparency = 1
+    joinBtn.Text = "DISCORD SERVER"
+    joinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    joinBtn.TextTransparency = 1
+    joinBtn.Font = Enum.Font.SourceSansBold
+    joinBtn.TextSize = 13
+    joinBtn.Parent = discordOverlay
+    Instance.new("UICorner", joinBtn).CornerRadius = UDim.new(0, 6)
+
+    local btnStroke = Instance.new("UIStroke")
+    btnStroke.Color = Color3.fromRGB(255, 255, 255)
+    btnStroke.Transparency = 1
+    btnStroke.Thickness = 1
+    btnStroke.Parent = joinBtn
+
+    local animTime = 0.45
+    local tweenInfoIn = TweenInfo.new(animTime, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    local tweenInfoFade = TweenInfo.new(animTime, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+    TweenService:Create(discordOverlay, tweenInfoIn, {Position = targetPos, Size = targetSize}):Play()
+    TweenService:Create(discordOverlay, tweenInfoFade, {BackgroundTransparency = 0.25}):Play()
+    TweenService:Create(frameStroke, tweenInfoFade, {Transparency = 0.4}):Play()
+    TweenService:Create(pillBtn, tweenInfoFade, {BackgroundTransparency = 0.4}):Play()
+    TweenService:Create(joinBtn, tweenInfoFade, {BackgroundTransparency = 0.2, TextTransparency = 0}):Play()
+    TweenService:Create(btnStroke, tweenInfoFade, {Transparency = 0.8}):Play()
+
+    local pulseInfo = TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+    local pulseTween = TweenService:Create(joinBtn, pulseInfo, {
+        TextSize = 15,
+        BackgroundTransparency = 0.0
+    })
+    
+    task.delay(animTime, function()
+        if pulseTween then pulseTween:Play() end
+    end)
+
+    local isClosing = false
+    local function closeMenuWithAnimation()
+        if isClosing then return end
+        isClosing = true
+
+        pulseTween:Cancel()
+
+        local tweenInfoOut = TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+        local tweenInfoFadeOut = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+
+        TweenService:Create(discordOverlay, tweenInfoOut, {Position = startPosAnim, Size = startSizeAnim}):Play()
+        TweenService:Create(discordOverlay, tweenInfoFadeOut, {BackgroundTransparency = 1}):Play()
+        TweenService:Create(frameStroke, tweenInfoFadeOut, {Transparency = 1}):Play()
+        TweenService:Create(pillBtn, tweenInfoFadeOut, {BackgroundTransparency = 1}):Play()
+        TweenService:Create(joinBtn, tweenInfoFadeOut, {BackgroundTransparency = 1, TextTransparency = 1}):Play()
+        TweenService:Create(btnStroke, tweenInfoFadeOut, {Transparency = 1}):Play()
+
+        task.wait(0.35)
+        overlayGui:Destroy()
+    end
+
+    local dragging = false
+    local dragStart, startPos
+    local pressStartTime = 0
+    local hasMoved = false
+
+    local function updateInput(input)
+        local delta = input.Position - dragStart
+        if delta.Magnitude > 5 then
+            hasMoved = true
+        end
+        discordOverlay.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+
+    pillBtn.InputBegan:Connect(function(input)
+        if isClosing then return end
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            hasMoved = false
+            pressStartTime = os.clock()
+            dragStart = input.Position
+            startPos = discordOverlay.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                    local duration = (os.clock() - pressStartTime) * 1000
+                    
+                    if duration <= 150 and not hasMoved then
+                        closeMenuWithAnimation()
+                    end
+                end
+            end)
+        end
+    end)
+
+    pillBtn.InputChanged:Connect(function(input)
+        if dragging and not isClosing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            updateInput(input)
+        end
+    end)
+
+    joinBtn.MouseButton1Click:Connect(function()
+        if isClosing then return end
+        local inviteUrl = "https://discord.gg/KVsveRfEmt"
+        
+        if setclipboard then setclipboard(inviteUrl)
+        elseif toclipboard then toclipboard(inviteUrl) end
+
+        pcall(function()
+            local req = (syn and syn.request) or (http and http.request) or http_request or request
+            if req then
+                req({
+                    Url = "http://127.0.0.1:6463/rpc?v=1",
+                    Method = "POST",
+                    Headers = {["Content-Type"] = "application/json", ["Origin"] = "https://discord.com"},
+                    Body = HttpService:JSONEncode({
+                        cmd = "INVITE_BROWSER",
+                        args = {code = "KVsveRfEmt"},
+                        nonce = HttpService:GenerateGUID(false)
+                    })
+                })
+            end
+        end)
+        
+        pcall(function()
+            if openurl then openurl(inviteUrl) end
+        end)
+    end)
 end)
