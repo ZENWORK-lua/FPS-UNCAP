@@ -517,13 +517,13 @@ dLbl.Parent = infoCard
 -- 30 Saniyelik Dinamik FPS Yargılama Mantığı
 task.spawn(function()
     while env.SYROX_RUNNING do
-        local fpsVal = currentRealFps or 0 or 25
+        local fpsVal = currentRealFps or 10
         local rating = "LOW"
-        if fpsVal >= 61 or 90 then
+        if fpsVal >= 65 then
             rating = "SUPER"
-        elseif fpsVal >= 50 or 60  then
+        elseif fpsVal >= 50 then
             rating = "HIGH"
-        elseif fpsVal >= 26 or 35 then
+        elseif fpsVal >= 30 then
             rating = "MID"
         end
         local activeT = langData[currentLang] or langData.EN
