@@ -173,7 +173,7 @@ local currentLang = env.HYPER_SAVE.Language or "EN"
 local langData = {
     EN = {
         SysTab = "SYSTEM", MoreTab = "MORE", ThemeTitle = "MY THEMES",
-        Restart = "RESTART SCRIPT", DiscordText = "Report bugs on Discord: lowkeyzenith",
+        Restart = "RESTART SCRIPT", DiscordText = "Report bugs on Discord Server",
         TargetFps = "Target FPS: %d FPS", CurrentFps = "Current FPS: %d",
         FeaturesTitle = "FEATURES (SWIPE RIGHT ->)",
         
@@ -205,7 +205,7 @@ local langData = {
     },
     TR = {
         SysTab = "SİSTEM", MoreTab = "DİĞER", ThemeTitle = "TEMALARIM",
-        Restart = "SCRİPT'İ YENİDEN BAŞLAT", DiscordText = "Hataları Discord'dan bildirin: lowkeyzenith",
+        Restart = "SCRİPT'İ YENİDEN BAŞLAT", DiscordText = "Hataları Discord Sunucusuna Bildirin",
         TargetFps = "Hedef FPS: %d FPS", CurrentFps = "Mevcut FPS: %d",
         FeaturesTitle = "ÖZELLİKLER (SAĞA KAYDIR ->)",
         
@@ -237,7 +237,7 @@ local langData = {
     },
     ES = {
         SysTab = "SISTEMA", MoreTab = "MÁS", ThemeTitle = "MIS TEMAS",
-        Restart = "REINICIAR SCRIPT", DiscordText = "Reportar errores en Discord: lowkeyzenith",
+        Restart = "REINICIAR SCRIPT", DiscordText = "Reportar errores en Discord presentador",
         TargetFps = "FPS Objetivo: %d FPS", CurrentFps = "FPS Actual: %d",
         FeaturesTitle = "FUNCIONES (DESLIZA DERECHA ->)",
         
@@ -269,7 +269,7 @@ local langData = {
     },
     RU = {
         SysTab = "СИСТЕМА", MoreTab = "ЕЩЕ", ThemeTitle = "МОИ ТЕМЫ",
-        Restart = "ПЕРЕЗАПУСТИТЬ СКРИПТ", DiscordText = "Ошибки в Discord: lowkeyzenith",
+        Restart = "ПЕРЕЗАПУСТИТЬ СКРИПТ", DiscordText = "Ошибки в Discord сервер",
         TargetFps = "Целевой FPS: %d FPS", CurrentFps = "Текущий FPS: %d",
         FeaturesTitle = "ФУНКЦИИ (СМАЙП ВПРАВО ->)",
         
