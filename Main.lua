@@ -997,10 +997,23 @@ task.spawn(function()
     pillBtn.Parent = discordOverlay
     Instance.new("UICorner", pillBtn).CornerRadius = UDim.new(1, 0)
 
+    -- [[ YENİ EKLENEN ÜST BEYAZ YAZI ]]
+    local headerLabel = Instance.new("TextLabel")
+    headerLabel.Name = "HeaderLabel"
+    headerLabel.Size = UDim2.new(0.9, 0, 0, 18)
+    headerLabel.Position = UDim2.new(0.05, 0, 0.24, 0)
+    headerLabel.BackgroundTransparency = 1
+    headerLabel.Text = "↓join our discord server↓"
+    headerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    headerLabel.TextTransparency = 1
+    headerLabel.Font = Enum.Font.SourceSansBold
+    headerLabel.TextSize = 13
+    headerLabel.Parent = discordOverlay
+
     local joinBtn = Instance.new("TextButton")
     joinBtn.Name = "JoinDiscordBtn"
-    joinBtn.Size = UDim2.new(0.85, 0, 0.45, 0)
-    joinBtn.Position = UDim2.new(0.075, 0, 0.4, 0)
+    joinBtn.Size = UDim2.new(0.85, 0, 0.4, 0)
+    joinBtn.Position = UDim2.new(0.075, 0, 0.48, 0) -- Buton hafif aşağı kaydırıldı
     joinBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
     joinBtn.BackgroundTransparency = 1
     joinBtn.Text = "DISCORD SERVER"
@@ -1025,12 +1038,13 @@ task.spawn(function()
     TweenService:Create(discordOverlay, tweenInfoFade, {BackgroundTransparency = 0.25}):Play()
     TweenService:Create(frameStroke, tweenInfoFade, {Transparency = 0.4}):Play()
     TweenService:Create(pillBtn, tweenInfoFade, {BackgroundTransparency = 0.4}):Play()
+    TweenService:Create(headerLabel, tweenInfoFade, {TextTransparency = 0}):Play() -- Üst yazı açılış animasyonu
     TweenService:Create(joinBtn, tweenInfoFade, {BackgroundTransparency = 0.2, TextTransparency = 0}):Play()
     TweenService:Create(btnStroke, tweenInfoFade, {Transparency = 0.8}):Play()
 
     local pulseInfo = TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
     local pulseTween = TweenService:Create(joinBtn, pulseInfo, {
-        TextSize = 15,
+        TextSize = 14,
         BackgroundTransparency = 0.0
     })
     
@@ -1043,7 +1057,7 @@ task.spawn(function()
         if isClosing then return end
         isClosing = true
 
-        pulseTween:Cancel()
+        if pulseTween then pulseTween:Cancel() end
 
         local tweenInfoOut = TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In)
         local tweenInfoFadeOut = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
@@ -1052,6 +1066,7 @@ task.spawn(function()
         TweenService:Create(discordOverlay, tweenInfoFadeOut, {BackgroundTransparency = 1}):Play()
         TweenService:Create(frameStroke, tweenInfoFadeOut, {Transparency = 1}):Play()
         TweenService:Create(pillBtn, tweenInfoFadeOut, {BackgroundTransparency = 1}):Play()
+        TweenService:Create(headerLabel, tweenInfoFadeOut, {TextTransparency = 1}):Play() -- Üst yazı kapanış animasyonu
         TweenService:Create(joinBtn, tweenInfoFadeOut, {BackgroundTransparency = 1, TextTransparency = 1}):Play()
         TweenService:Create(btnStroke, tweenInfoFadeOut, {Transparency = 1}):Play()
 
@@ -1100,8 +1115,12 @@ task.spawn(function()
         end
     end)
 
+    -- [[ TIKLAMA VE FADEOUT/FADEIN METİN DEĞİŞTİRME MEKANİZMASI ]]
+    local isCopiedAnimActive = false
     joinBtn.MouseButton1Click:Connect(function()
-        if isClosing then return end
+        if isClosing or isCopiedAnimActive then return end
+        isCopiedAnimActive = true
+
         local inviteUrl = "https://discord.gg/KVsveRfEmt"
         
         if setclipboard then setclipboard(inviteUrl)
@@ -1125,6 +1144,28 @@ task.spawn(function()
         
         pcall(function()
             if openurl then openurl(inviteUrl) end
+        end)
+
+        -- Pulse efektini durdur ki metin rengi/transparanlığı çakışmasın
+        if pulseTween then pulseTween:Cancel() end
+
+        -- 1. "DISCORD SERVER" yazısını karartarak kapat (Fade Out)
+        local fadeOutText = TweenService:Create(joinBtn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            TextTransparency = 1
+        })
+        fadeOutText:Play()
+
+        fadeOutText.Completed:Connect(function()
+            -- 2. Metni güncelle
+            joinBtn.Text = "copied!"
+            joinBtn.TextSize = 13
+            
+            -- 3. "copied!" yazısını aydınlatarak aç (Fade In)
+            local fadeInText = TweenService:Create(joinBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                TextTransparency = 0,
+                BackgroundTransparency = 0.1
+            })
+            fadeInText:Play()
         end)
     end)
 end)
