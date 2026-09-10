@@ -1166,6 +1166,18 @@ task.spawn(function()
                 BackgroundTransparency = 0.1
             })
             fadeInText:Play()
+                        -- 3. "copied!" yazısını aydınlatarak aç (Fade In)
+            local fadeInText = TweenService:Create(joinBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                TextTransparency = 0,
+                BackgroundTransparency = 0.1
+            })
+            fadeInText:Play()
+
+            -- BU 3 SATIRI TAM BURAYA EKLİYORSUN:
+            task.delay(3, function()
+                closeMenuWithAnimation()
+            end)
+                        
         end)
     end)
 end)
